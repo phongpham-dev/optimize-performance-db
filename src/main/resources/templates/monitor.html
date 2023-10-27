@@ -1,0 +1,38 @@
+<html>
+<meta http-equiv="refresh" content="{{refreshInSecond}}" >
+<head>
+    <title> SQL monitor - Realtime Profiler</title>
+</head>
+<body>
+<table style="border-collapse:collapse;" border=1 cellpadding=5 cellspacing=5 width="100%">
+    <thead>
+    <tr>
+        <th colspan="9" style="background-color:aliceblue;">Request Profiling</th>
+    </tr>
+    <tr style="background-color: paleturquoise">
+        <th>Event ID</th>
+        <th>Duration<br/>(milisecs)</th>
+        <th>SQL text</th>
+        <th>Rows</th>
+        <th>Extra</th>
+        <th>Key</th>
+    </tr>
+    </thead>
+    <tbody style="text-align: right">
+    {{#listItem}}
+    <tr>
+        <td style="text-align: center">{{eventId}}</td>
+        <td>{{durationInMs}}</td>
+        <td>{{sqlText}}</td>
+        {{#explain}}
+        <td>{{rows}}</td>
+        <td>{{extra}}</td>
+        <td>{{key}}</td>
+        {{/explain}}
+    </tr>
+    {{/listItem}}
+    </tbody>
+</table>
+<br/>
+</body>
+</html>

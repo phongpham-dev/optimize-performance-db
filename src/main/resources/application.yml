@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: "op-db"
+  datasource:
+    url: jdbc:mysql://127.0.0.1:2216/op-research
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: pass
+  sql:
+    init:
+      mode: always
+      schema-locations:
+        - classpath:databases/mysql/schema.sql
+  mustache:
+    suffix: .html
