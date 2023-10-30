@@ -3,9 +3,11 @@ package research.repository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import research.domain.StatementHistoryEvent;
 import research.domain.mysql.ExplainData;
 
@@ -13,7 +15,10 @@ import java.util.*;
 
 @Component
 @Getter
+@Transactional
 public class EventHolder {
+
+    @PersistenceContext
     @Autowired
     private EntityManager entityManager;
 

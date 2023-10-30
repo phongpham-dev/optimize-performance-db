@@ -1,0 +1,55 @@
+<html>
+<meta >
+<head>
+    <title> SQL monitor - Realtime Profiler</title>
+</head>
+<body>
+<table style="border-collapse:collapse;" border=1 cellpadding=5 cellspacing=5 width="100%">
+    <thead>
+    <tr>
+        <th colspan="9" style="background-color:aliceblue;">Request Profiling</th>
+    </tr>
+    <tr style="background-color: paleturquoise">
+        <th>Duration<br/>(milisecs)</th>
+        <th>SQL text</th>
+        <th>Rows</th>
+        <th>Fitered</th>
+        <th>Extra</th>
+        <th>Key</th>
+    </tr>
+    </thead>
+    <tbody style="text-align: right">
+    {{#listItem}}
+    {{#isBadQuery}}
+    <tr>
+        <td>{{durationInMs}}</td>
+        <td>{{sqlOrigin}}</td>
+        {{#explain}}
+        <td>{{rows}}</td>
+        <td>{{filtered}}</td>
+        <td width="20px">{{extra}}</td>
+        <td>{{key}}</td>
+        {{/explain}}
+    </tr>
+    {{/isBadQuery}}
+    {{^isBadQuery}}
+    <tr>
+        <td>{{durationInMs}}</td>
+        <td>{{sqlOrigin}}</td>
+        {{#explain}}
+        <td>{{rows}}</td>
+        <td>{{filtered}}</td>
+        <td width="20px">{{extra}}</td>
+        <td>{{key}}</td>
+        {{/explain}}
+    </tr>
+    <tr style="height:2px">
+        <td align="center" colspan="10">---------------</td>
+    </tr>
+    {{/isBadQuery}}
+    {{/listItem}}
+    </tbody>
+</table>
+<br/>
+</body>
+</html>

@@ -1,6 +1,5 @@
 package research.domain;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -13,20 +12,17 @@ import research.domain.mysql.ExplainData;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Entity
-public class StatementHistoryEvent {
-    @Id
-    private Long eventId;
+public class VisualizationData {
 
-    @Column(name = "duration")
+    private Boolean isBadQuery;
+
     private Double durationInMs;
 
-    @Column(name = "sql_text")
+    private String sqlOrigin;
+
     private String sqlText;
 
-    @Transient
     private ExplainData explain;
 
-    @Column(name = "statement_id")
-    private Long statementId;
+
 }

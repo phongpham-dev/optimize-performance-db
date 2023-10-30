@@ -18,12 +18,13 @@ public class ApplicationConfig {
     @Bean
     public Boolean initData() {
         try {
+            System.out.println("init data");
             Random random = new Random();
             String[] sizeList = {"M", "L", "XL"};
-            String[] productLineList = {"R", "M", "T", "S"};
+            String[] productLineList = {"M", "R", "S", "T"};
             Integer[] categories = {1, 2, 3, 4, 5};
-            String[] colors = {"red","yellow", "blue", "black", "while", "orange"};
-            var products = IntStream.range(1, 100000).mapToObj(i -> Product.builder()
+            String[] colors = {"red", "yellow", "blue", "black", "while", "orange"};
+            var products = IntStream.range(1, 200000).mapToObj(i -> Product.builder()
                     .name("name " + i)
                     .productNumber("PN-" + i)
                     .makeFlag(random.nextBoolean())

@@ -1,3 +1,5 @@
+--https://medium.com/datadenys/using-explain-in-mysql-to-analyze-and-improve-query-performance-f58357deb2aa
+--https://stackoverflow.com/questions/41534802/what-is-the-filtered-column-in-mysql-explain-telling-me-and-how-can-i-make-us
 SELECT * FROM `op-research`.product;
 
 

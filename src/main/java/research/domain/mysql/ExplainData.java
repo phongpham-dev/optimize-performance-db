@@ -15,6 +15,7 @@ import java.util.Optional;
 @Data
 @Entity
 public class ExplainData {
+
     @Id
     private Long id;
 
@@ -39,6 +40,9 @@ public class ExplainData {
     @Column(name = "ref")
     private String ref;
 
+    @Column(name = "filtered")
+    private Float filtered;
+
     public Map<String, Object> toMap() {
         return Map.of(
                 "rows", Optional.ofNullable(rows).orElse(0L),
@@ -47,7 +51,8 @@ public class ExplainData {
                 "type", Optional.ofNullable(type).orElse(""),
                 "possibleKeys", Optional.ofNullable(possibleKeys).orElse(""),
                 "key", Optional.ofNullable(key).orElse(""),
-                "ref", Optional.ofNullable(ref).orElse("")
+                "ref", Optional.ofNullable(ref).orElse(""),
+                "filtered", Optional.ofNullable(filtered).orElse(0f)
         );
     }
 }
