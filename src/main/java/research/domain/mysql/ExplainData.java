@@ -67,7 +67,7 @@ public class ExplainData {
             strings.add(text.substring(index, Math.min(index + 4,text.length())));
             index += 4;
         }
-        return StringUtils.collectionToDelimitedString(strings, "</br>");
+        return StringUtils.collectionToDelimitedString(strings, "\n");
     }
 
 }
