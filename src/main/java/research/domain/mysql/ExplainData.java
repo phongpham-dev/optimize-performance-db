@@ -6,7 +6,10 @@ import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -44,9 +47,10 @@ public class ExplainData {
     private Float filtered;
 
     public Map<String, Object> toMap() {
+        System.out.println("addspace " + addSpace(Optional.ofNullable(extra).orElse("")));
         return Map.of(
                 "rows", Optional.ofNullable(rows).orElse(0L),
-                "extra", Optional.ofNullable(extra).orElse(""),
+                "extra", addSpace(Optional.ofNullable(extra).orElse("")),
                 "selectType", Optional.ofNullable(selectType).orElse(""),
                 "type", Optional.ofNullable(type).orElse(""),
                 "possibleKeys", Optional.ofNullable(possibleKeys).orElse(""),
@@ -55,4 +59,15 @@ public class ExplainData {
                 "filtered", Optional.ofNullable(filtered).orElse(0f)
         );
     }
+
+    public String addSpace(String text) {
+        List<String> strings = new ArrayList<String>();
+        int index = 0;
+        while (index < text.length()) {
+            strings.add(text.substring(index, Math.min(index + 4,text.length())));
+            index += 4;
+        }
+        return StringUtils.collectionToDelimitedString(strings, "</br>");
+    }
+
 }
