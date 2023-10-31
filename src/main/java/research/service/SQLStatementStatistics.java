@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.samskivert.mustache.Mustache;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Getter;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.mustache.MustacheResourceTemplateLoader;
 import org.springframework.data.util.Pair;
@@ -14,10 +16,8 @@ import org.springframework.util.StringUtils;
 import research.domain.VisualizationData;
 import research.domain.mysql.ExplainData;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 
 @Service
@@ -597,7 +597,36 @@ public class SQLStatementStatistics {
     @Autowired
     MustacheResourceTemplateLoader mustacheResourceTemplateLoader;
 
+    public String readFIle() throws IOException {
+        File file = new File("/Users/phong/working/research/optimize-performance-db/README1.md");
+        return FileUtils.readFileToString(file);
+    }
+
+    public int readFile() {
+        BufferedReader reader;
+        int length = 0;
+        try {
+            reader = new BufferedReader(new FileReader("sample.txt"));
+            String line = reader.readLine();
+
+            while (line != null) {
+                if (line.startsWith("--Add table--")) return length;
+                // read next line
+                length = length + line.length();
+                line = reader.readLine();
+            }
+
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
     public void export01() throws Exception {
+        var contetn = readFIle();
+
         statisticsWhere();
         var reader = mustacheResourceTemplateLoader.getTemplate("visualize");
         var m = Mustache.compiler().compile(reader);
@@ -606,17 +635,26 @@ public class SQLStatementStatistics {
         System.out.println("template " + rs);
 
         File file = new File("/Users/phong/working/research/optimize-performance-db/README.md");
-        FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
+        FileWriter fileWriter = new FileWriter(file.getAbsoluteFile(), false);
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-        bufferedWriter.write(rs);
+
+//        PrintWriter printWriter = new PrintWriter(bufferedWriter);
+//        printWriter.println(rs);
+
+        bufferedWriter.write(contetn);
+        bufferedWriter.newLine();
+        //   bufferedWriter.write("rs", Integer.parseInt("" + file.getAbsoluteFile().length()), rs.length());
+        // bufferedWriter.append(rs, Integer.parseInt("" + file.getAbsoluteFile().length()), rs.length());
+        bufferedWriter.append(rs);
         bufferedWriter.close();
+        // printWriter.close();
     }
 
     public String addSpace(String text) {
         List<String> strings = new ArrayList<String>();
         int index = 0;
         while (index < text.length()) {
-            strings.add(text.substring(index, Math.min(index + 4,text.length())));
+            strings.add(text.substring(index, Math.min(index + 4, text.length())));
             index += 4;
         }
         return StringUtils.collectionToDelimitedString(strings, "<br>");
@@ -631,7 +669,7 @@ public class SQLStatementStatistics {
             FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
-            var dataForExport =visualizationDatas.stream().map(v -> {
+            var dataForExport = visualizationDatas.stream().map(v -> {
 
                 var list = List.of(
                         Optional.ofNullable(String.format("%.2f", v.getDurationInMs())).orElse(" "),
@@ -650,15 +688,15 @@ public class SQLStatementStatistics {
             }).toList();
 
 
-           dataForExport.forEach(v -> {
-               try {
-                   bufferedWriter.write(v);
-                   bufferedWriter.newLine();
-               } catch (IOException e) {
-                   throw new RuntimeException(e);
-               }
+            dataForExport.forEach(v -> {
+                try {
+                    bufferedWriter.write(v);
+                    bufferedWriter.newLine();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
 
-           });
+            });
 
             bufferedWriter.close();
 

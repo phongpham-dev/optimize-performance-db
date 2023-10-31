@@ -1,14 +1,24 @@
-```html
-<h2>Example of code</h2>
+```text
+CREATE TABLE IF NOT EXISTS `t1` (
+  `primary_key` int(11) NOT NULL AUTO_INCREMENT 
+  `unique_key` varchar(100) CHARACTER SET utf8mb4 NOT NULL
+  `col_not_index` decimal(19,0) NOT NULL
+  `size` varchar(5) CHARACTER SET utf8mb4 DEFAULT NULL
+  `part_key1` decimal(19,0) NOT NULL
+  `part_key2` decimal(8, 0) DEFAULT NULL COMMENT
+  `single_key` decimal(19,0) NOT NULL COMMENT
+  `single_key1` int(11) DEFAULT NULL COMMENT
+  PRIMARY KEY (`primary_key`),
+  UNIQUE KEY `unique_key` (`unique_key`),
+  INDEX single_key(`single_key`),
+  KEY `single_key1` (`product_subcategory_id`),
+  INDEX part_key1_key2(`part_key1`, `part_key2`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-<pre>
-    <div class="container">
-        <div class="block two first">
-            <h2>Your title</h2>
-            <div class="wrap">
-            //Your content
-            </div>
-        </div>
-    </div>
-</pre>
+CREATE TABLE IF NOT EXISTS `t2` (
+  `id` int(11) NOT NULL
+  `unique_key` varchar(100) CHARACTER SET utf8mb4 NOT NULL
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_key` (`unique_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='High-level product categorization.';
 ```
