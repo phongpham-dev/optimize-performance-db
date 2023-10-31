@@ -335,10 +335,6 @@ public class SQLStatementStatistics {
 
     public List<Pair<String, String>> commonSql() {
         String[] whereOptimization = {
-                //ALL
-                "(b) SELECT * FROM t1 WHERE single_key_as_string like '%1'",
-                "(o) SELECT * FROM t1",
-
                 //constant table
                 "(q) SELECT * FROM t1 WHERE primary_key = 1",
                 "(q) SELECT * FROM t1 WHERE unique_key = 'name 1'",

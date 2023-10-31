@@ -20,12 +20,12 @@ CREATE TABLE IF NOT EXISTS `product` (
   `modified_date` bigint(20) NOT NULL DEFAULT '0' COMMENT 'Date and time the record was last updated.',
   PRIMARY KEY (`id`),
   UNIQUE KEY `k_product_number` (`product_number`),
-  UNIQUE KEY `k_product_name` (`name`),
+  UNIQUE KEY `unique_key` (`name`),
   INDEX product_line_size (`product_line`, `size`),
   INDEX product_line_size_w (`product_line`, `size`, `weight`),
-  INDEX price(`list_price`),
-  INDEX list_price_weight(`list_price`, `weight`),
-  KEY `product_category` (`product_subcategory_id`)
+  INDEX single_key(`list_price`),
+  INDEX part_key1_key2(`list_price`, `weight`),
+  KEY `single_key1` (`product_subcategory_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Products sold or used in the manfacturing of sold products.';
 
 DROP TABLE IF EXISTS category;
