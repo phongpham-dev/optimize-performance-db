@@ -51,7 +51,7 @@ public class ExplainData {
                 "selectType", Optional.ofNullable(selectType).orElse(""),
                 "type", Optional.ofNullable(type).orElse(""),
                 "possibleKeys", Optional.ofNullable(possibleKeys).orElse(""),
-                "key", Optional.ofNullable(key).orElse(""),
+                "key", addSpace1(Optional.ofNullable(key).orElse("")),
                 "ref", Optional.ofNullable(ref).orElse(""),
                 "filtered", Optional.ofNullable(filtered).orElse(0f)
         );
@@ -70,6 +70,6 @@ public class ExplainData {
     public String addSpace1(String text) {
         String regex = "(,|;)";
         var arr = Arrays.stream(text.split(regex)).toList();
-        return StringUtils.collectionToDelimitedString(arr, "\n");
+        return StringUtils.collectionToDelimitedString(arr, "\n,");
     }
 }

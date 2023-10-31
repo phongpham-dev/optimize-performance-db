@@ -28,7 +28,7 @@
     </thead>
     <tbody style="text-align: right">
     <tr>
-        <td>0.88</td>
+        <td>0.97</td>
         <td width="500">(q) SELECT * FROM t1 WHERE primary_key &#x3D; 1</td>
         <td>1</td>
         <td>100.0</td>
@@ -37,7 +37,7 @@
         <td>const</td>
     </tr>
     <tr>
-        <td>0.24</td>
+        <td>0.76</td>
         <td width="500">(q) SELECT * FROM t1 WHERE unique_key &#x3D; &#39;name 1&#39;</td>
         <td>0</td>
         <td>0.0</td>
@@ -46,7 +46,7 @@
         <td></td>
     </tr>
     <tr>
-        <td>0.30</td>
+        <td>0.52</td>
         <td width="500">(q) SELECT * FROM t1 WHERE unique_key &#x3D; &#39;name 1&#39;</td>
         <td>0</td>
         <td>0.0</td>
@@ -55,7 +55,7 @@
         <td></td>
     </tr>
     <tr>
-        <td>0.26</td>
+        <td>0.49</td>
         <td width="500">(o) SELECT * FROM t1 WHERE primary_key &#x3D; 1 AND unique_key &#x3D; &#39;name 1&#39;</td>
         <td>0</td>
         <td>0.0</td>
@@ -67,18 +67,19 @@
         <td align="center" colspan="10">---------------</td>
     </tr>
     <tr>
-        <td>0.36</td>
+        <td>0.60</td>
         <td width="500">(q) SELECT * FROM t1 WHERE single_key &#x3D; 50 OR single_key1 &#x3D; 2</td>
         <td>76937</td>
         <td>100.0</td>
         <td>Using union(single_key
-single_key1)
- Using where</td>
-        <td>single_key,single_key1</td>
+,single_key1)
+, Using where</td>
+        <td>single_key
+,single_key1</td>
         <td>index_merge</td>
     </tr>
     <tr>
-        <td>0.40</td>
+        <td>0.65</td>
         <td width="500">(q) SELECT * FROM t1 WHERE single_key &lt; 50 OR single_key1 &lt; 2</td>
         <td>191503</td>
         <td>55.55</td>
@@ -87,7 +88,7 @@ single_key1)
         <td>ALL</td>
     </tr>
     <tr>
-        <td>0.36</td>
+        <td>0.47</td>
         <td width="500">(q) SELECT * FROM t1 WHERE single_key &#x3D; 50 AND single_key1 &#x3D; 2</td>
         <td>104</td>
         <td>40.14</td>
@@ -96,18 +97,19 @@ single_key1)
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.36</td>
+        <td>0.98</td>
         <td width="500">(q) SELECT * FROM t1 WHERE (single_key &#x3D; 50 AND col_not_index &#x3D; 50) OR single_key1 &#x3D; 2</td>
         <td>76937</td>
         <td>100.0</td>
         <td>Using union(single_key
-single_key1)
- Using where</td>
-        <td>single_key,single_key1</td>
+,single_key1)
+, Using where</td>
+        <td>single_key
+,single_key1</td>
         <td>index_merge</td>
     </tr>
     <tr>
-        <td>0.35</td>
+        <td>0.83</td>
         <td width="500">(o) SELECT * FROM t1 WHERE primary_key &lt; 50 AND single_key &#x3D; 5</td>
         <td>1</td>
         <td>100.0</td>
@@ -119,7 +121,7 @@ single_key1)
         <td align="center" colspan="10">---------------</td>
     </tr>
     <tr>
-        <td>0.26</td>
+        <td>0.36</td>
         <td width="500">(b) SELECT * FROM t1 WHERE col_not_index &#x3D; 500</td>
         <td>191503</td>
         <td>10.0</td>
@@ -128,7 +130,7 @@ single_key1)
         <td>ALL</td>
     </tr>
     <tr>
-        <td>0.28</td>
+        <td>0.41</td>
         <td width="500">(q) SELECT * FROM t1 WHERE single_key &#x3D; 3</td>
         <td>88</td>
         <td>100.0</td>
@@ -137,7 +139,7 @@ single_key1)
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.23</td>
+        <td>0.33</td>
         <td width="500">(q) SELECT single_key FROM t1 WHERE single_key &#x3D; 3</td>
         <td>88</td>
         <td>100.0</td>
@@ -146,7 +148,7 @@ single_key1)
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.25</td>
+        <td>0.51</td>
         <td width="500">(q) SELECT * FROM t1 WHERE single_key &#x3D; 3 OR col_not_index &#x3D; 50</td>
         <td>191503</td>
         <td>19.0</td>
@@ -155,7 +157,7 @@ single_key1)
         <td>ALL</td>
     </tr>
     <tr>
-        <td>0.25</td>
+        <td>0.43</td>
         <td width="500">(q) SELECT * FROM t1 WHERE single_key &#x3D; 3 AND col_not_index &#x3D; 50</td>
         <td>88</td>
         <td>10.0</td>
@@ -164,7 +166,7 @@ single_key1)
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.23</td>
+        <td>0.67</td>
         <td width="500">(q) SELECT * FROM t1 WHERE single_key &gt; 5</td>
         <td>191503</td>
         <td>50.0</td>
@@ -173,17 +175,17 @@ single_key1)
         <td>ALL</td>
     </tr>
     <tr>
-        <td>0.26</td>
+        <td>0.72</td>
         <td width="500">(q) SELECT single_key FROM t1 WHERE single_key &gt; 5</td>
         <td>95751</td>
         <td>100.0</td>
         <td>Using where
- Using index</td>
+, Using index</td>
         <td>single_key</td>
         <td>range</td>
     </tr>
     <tr>
-        <td>0.19</td>
+        <td>0.59</td>
         <td width="500">(q) SELECT * FROM t1 WHERE single_key &lt; 5</td>
         <td>317</td>
         <td>100.0</td>
@@ -192,12 +194,12 @@ single_key1)
         <td>range</td>
     </tr>
     <tr>
-        <td>0.21</td>
+        <td>0.34</td>
         <td width="500">(o) SELECT single_key FROM t1 WHERE single_key &lt; 5</td>
         <td>317</td>
         <td>100.0</td>
         <td>Using where
- Using index</td>
+, Using index</td>
         <td>single_key</td>
         <td>range</td>
     </tr>
@@ -205,7 +207,7 @@ single_key1)
         <td align="center" colspan="10">---------------</td>
     </tr>
     <tr>
-        <td>0.29</td>
+        <td>0.46</td>
         <td width="500">(b) SELECT * FROM t1 WHERE part_key2 &#x3D; 12</td>
         <td>191503</td>
         <td>10.0</td>
@@ -214,7 +216,7 @@ single_key1)
         <td>ALL</td>
     </tr>
     <tr>
-        <td>0.22</td>
+        <td>0.49</td>
         <td width="500">(b) SELECT * FROM t1 WHERE part_key1 &#x3D; 1000 OR part_key2 &#x3D; 12</td>
         <td>191503</td>
         <td>19.0</td>
@@ -223,7 +225,7 @@ single_key1)
         <td>ALL</td>
     </tr>
     <tr>
-        <td>0.23</td>
+        <td>0.69</td>
         <td width="500">(b) SELECT * FROM t1 WHERE part_key1 &#x3D; 500 OR col_not_index &#x3D; 500</td>
         <td>191503</td>
         <td>19.0</td>
@@ -232,7 +234,7 @@ single_key1)
         <td>ALL</td>
     </tr>
     <tr>
-        <td>0.25</td>
+        <td>0.50</td>
         <td width="500">(q) SELECT * FROM t1 WHERE part_key1 &#x3D; 500</td>
         <td>99</td>
         <td>100.0</td>
@@ -241,7 +243,7 @@ single_key1)
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.23</td>
+        <td>0.43</td>
         <td width="500">(q) SELECT * FROM t1 WHERE part_key1 &#x3D; 1000 AND part_key2 &#x3D; 12</td>
         <td>1</td>
         <td>100.0</td>
@@ -250,7 +252,7 @@ single_key1)
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.24</td>
+        <td>0.33</td>
         <td width="500">(q) SELECT * FROM t1 WHERE part_key1 &#x3D; 1000 AND part_key2 &gt; 12</td>
         <td>112</td>
         <td>33.33</td>
@@ -259,7 +261,7 @@ single_key1)
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.29</td>
+        <td>0.51</td>
         <td width="500">(o) SELECT * FROM t1 WHERE part_key1 &#x3D; 1000 AND part_key2 &lt; 12</td>
         <td>6</td>
         <td>100.0</td>
@@ -271,7 +273,7 @@ single_key1)
         <td align="center" colspan="10">---------------</td>
     </tr>
     <tr>
-        <td>0.22</td>
+        <td>0.63</td>
         <td width="500">(b) SELECT * FROM t1 WHERE col_not_index &gt;&#x3D; 1 AND col_not_index &lt; 5</td>
         <td>191503</td>
         <td>11.11</td>
@@ -280,7 +282,7 @@ single_key1)
         <td>ALL</td>
     </tr>
     <tr>
-        <td>0.29</td>
+        <td>0.47</td>
         <td width="500">(q) SELECT * FROM t1 WHERE single_key &gt;&#x3D; 1 AND single_key &lt; 5</td>
         <td>317</td>
         <td>100.0</td>
@@ -289,17 +291,17 @@ single_key1)
         <td>range</td>
     </tr>
     <tr>
-        <td>0.27</td>
+        <td>0.42</td>
         <td width="500">(q) SELECT * FROM t1 WHERE single_key &gt;&#x3D; 1 AND single_key &lt; 5 AND col_not_index &#x3D; 50</td>
         <td>317</td>
         <td>10.0</td>
         <td>Using index condition
- Using where</td>
+, Using where</td>
         <td>single_key</td>
         <td>range</td>
     </tr>
     <tr>
-        <td>0.26</td>
+        <td>0.53</td>
         <td width="500">(q) SELECT * FROM t1 WHERE single_key IN(1, 2, 3, 4)</td>
         <td>317</td>
         <td>100.0</td>
@@ -308,7 +310,7 @@ single_key1)
         <td>range</td>
     </tr>
     <tr>
-        <td>0.36</td>
+        <td>0.41</td>
         <td width="500">(q) SELECT * FROM t1 WHERE single_key &#x3D; 1 OR single_key &#x3D; 2</td>
         <td>140</td>
         <td>100.0</td>
@@ -317,7 +319,7 @@ single_key1)
         <td>range</td>
     </tr>
     <tr>
-        <td>0.28</td>
+        <td>0.57</td>
         <td width="500">(q) SELECT * FROM t1 WHERE single_key &lt; 5</td>
         <td>317</td>
         <td>100.0</td>
@@ -326,7 +328,7 @@ single_key1)
         <td>range</td>
     </tr>
     <tr>
-        <td>0.23</td>
+        <td>0.34</td>
         <td width="500">(o) SELECT * FROM t1 WHERE single_key BETWEEN 1 AND 4</td>
         <td>317</td>
         <td>100.0</td>
@@ -338,7 +340,7 @@ single_key1)
         <td align="center" colspan="10">---------------</td>
     </tr>
     <tr>
-        <td>0.23</td>
+        <td>0.31</td>
         <td width="500">(b) SELECT * FROM t1 WHERE single_key_as_string LIKE &#39;%1&#39;</td>
         <td>191503</td>
         <td>11.11</td>
@@ -347,7 +349,7 @@ single_key1)
         <td>ALL</td>
     </tr>
     <tr>
-        <td>0.27</td>
+        <td>0.43</td>
         <td width="500">(o) SELECT * FROM t1 WHERE single_key_as_string LIKE &#39;name1%&#39;</td>
         <td>191503</td>
         <td>50.0</td>
@@ -359,7 +361,7 @@ single_key1)
         <td align="center" colspan="10">---------------</td>
     </tr>
     <tr>
-        <td>0.21</td>
+        <td>0.27</td>
         <td width="500">(b) SELECT * FROM t1 ORDER BY single_key</td>
         <td>191503</td>
         <td>100.0</td>
@@ -368,7 +370,7 @@ single_key1)
         <td>ALL</td>
     </tr>
     <tr>
-        <td>0.21</td>
+        <td>0.29</td>
         <td width="500">(q) SELECT single_key FROM t1 ORDER BY single_key</td>
         <td>191503</td>
         <td>100.0</td>
@@ -377,7 +379,7 @@ single_key1)
         <td>index</td>
     </tr>
     <tr>
-        <td>0.23</td>
+        <td>0.45</td>
         <td width="500">(q) SELECT * FROM t1 ORDER BY single_key DESC LIMIT 100</td>
         <td>100</td>
         <td>100.0</td>
@@ -386,17 +388,17 @@ single_key1)
         <td>index</td>
     </tr>
     <tr>
-        <td>0.29</td>
+        <td>0.51</td>
         <td width="500">(b) SELECT * FROM t1 WHERE single_key &gt; 5 ORDER BY single_key DESC</td>
         <td>191503</td>
         <td>50.0</td>
         <td>Using where
- Using filesort</td>
+, Using filesort</td>
         <td></td>
         <td>ALL</td>
     </tr>
     <tr>
-        <td>0.27</td>
+        <td>0.38</td>
         <td width="500">(q) SELECT * FROM t1 WHERE single_key &#x3D; 3 ORDER BY single_key DESC</td>
         <td>88</td>
         <td>100.0</td>
@@ -405,7 +407,7 @@ single_key1)
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.27</td>
+        <td>0.32</td>
         <td width="500">(b) SELECT single_key FROM t1 WHERE single_key &#x3D; 3 ORDER BY single_key DESC</td>
         <td>88</td>
         <td>100.0</td>
@@ -414,7 +416,7 @@ single_key1)
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.26</td>
+        <td>0.37</td>
         <td width="500">(b) SELECT * FROM t1 WHERE single_key &lt; 5 ORDER BY single_key</td>
         <td>317</td>
         <td>100.0</td>
@@ -423,12 +425,12 @@ single_key1)
         <td>range</td>
     </tr>
     <tr>
-        <td>0.46</td>
+        <td>0.34</td>
         <td width="500">(o) SELECT single_key FROM t1 WHERE single_key &lt; 5 ORDER BY single_key</td>
         <td>317</td>
         <td>100.0</td>
         <td>Using where
- Using index</td>
+, Using index</td>
         <td>single_key</td>
         <td>range</td>
     </tr>
@@ -436,7 +438,7 @@ single_key1)
         <td align="center" colspan="10">---------------</td>
     </tr>
     <tr>
-        <td>0.24</td>
+        <td>0.30</td>
         <td width="500">(q) SELECT * FROM t1 ORDER BY part_key1, part_key2</td>
         <td>191503</td>
         <td>100.0</td>
@@ -445,7 +447,7 @@ single_key1)
         <td>ALL</td>
     </tr>
     <tr>
-        <td>0.28</td>
+        <td>0.54</td>
         <td width="500">(q) SELECT * FROM t1 WHERE part_key1 &#x3D; 2 ORDER BY part_key1 DESC, part_key2 DESC LIMIT 100</td>
         <td>97</td>
         <td>100.0</td>
@@ -454,7 +456,7 @@ single_key1)
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.22</td>
+        <td>0.30</td>
         <td width="500">(q) SELECT * FROM t1 ORDER BY part_key1 DESC, part_key2 DESC LIMIT 100</td>
         <td>100</td>
         <td>100.0</td>
@@ -463,7 +465,7 @@ single_key1)
         <td>index</td>
     </tr>
     <tr>
-        <td>0.24</td>
+        <td>0.35</td>
         <td width="500">(q) SELECT * FROM t1 ORDER BY part_key1 ASC, part_key2 ASC LIMIT 100</td>
         <td>100</td>
         <td>100.0</td>
@@ -472,7 +474,7 @@ single_key1)
         <td>index</td>
     </tr>
     <tr>
-        <td>0.30</td>
+        <td>0.58</td>
         <td width="500">(q) SELECT * FROM t1 WHERE part_key1 &#x3D; 2 ORDER BY part_key2</td>
         <td>97</td>
         <td>100.0</td>
@@ -481,7 +483,7 @@ single_key1)
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.35</td>
+        <td>0.47</td>
         <td width="500">(q) SELECT * FROM t1 WHERE part_key1 &#x3D; 2 AND part_key2 &gt; 12 ORDER BY part_key2</td>
         <td>93</td>
         <td>100.0</td>
@@ -490,7 +492,7 @@ single_key1)
         <td>range</td>
     </tr>
     <tr>
-        <td>0.34</td>
+        <td>0.38</td>
         <td width="500">(o) SELECT * FROM t1 WHERE part_key1 &#x3D; 2 AND part_key2 &lt; 12 ORDER BY part_key2</td>
         <td>3</td>
         <td>100.0</td>
@@ -502,17 +504,17 @@ single_key1)
         <td align="center" colspan="10">---------------</td>
     </tr>
     <tr>
-        <td>0.28</td>
+        <td>0.39</td>
         <td width="500">(b) SELECT col_not_index FROM t1 WHERE col_not_index &gt; 5 GROUP BY col_not_index</td>
         <td>191503</td>
         <td>33.33</td>
         <td>Using where
- Using temporary</td>
+, Using temporary</td>
         <td></td>
         <td>ALL</td>
     </tr>
     <tr>
-        <td>0.24</td>
+        <td>0.35</td>
         <td width="500">(b) SELECT * FROM t1 GROUP BY single_key</td>
         <td>191503</td>
         <td>100.0</td>
@@ -521,7 +523,7 @@ single_key1)
         <td>index</td>
     </tr>
     <tr>
-        <td>0.26</td>
+        <td>0.33</td>
         <td width="500">(b) SELECT single_key FROM t1 GROUP BY single_key</td>
         <td>1936</td>
         <td>100.0</td>
@@ -530,7 +532,7 @@ single_key1)
         <td>range</td>
     </tr>
     <tr>
-        <td>0.31</td>
+        <td>0.53</td>
         <td width="500">(b) SELECT * FROM t1 WHERE single_key &lt; 5 GROUP BY single_key</td>
         <td>317</td>
         <td>100.0</td>
@@ -539,17 +541,17 @@ single_key1)
         <td>range</td>
     </tr>
     <tr>
-        <td>0.37</td>
+        <td>0.38</td>
         <td width="500">(b) SELECT single_key FROM t1 WHERE single_key &lt; 5 GROUP BY single_key</td>
         <td>317</td>
         <td>100.0</td>
         <td>Using where
- Using index</td>
+, Using index</td>
         <td>single_key</td>
         <td>range</td>
     </tr>
     <tr>
-        <td>0.29</td>
+        <td>0.50</td>
         <td width="500">(b) SELECT * FROM t1 WHERE single_key &#x3D; 5 GROUP BY single_key</td>
         <td>97</td>
         <td>100.0</td>
@@ -558,7 +560,7 @@ single_key1)
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.29</td>
+        <td>0.34</td>
         <td width="500">(b) SELECT single_key FROM t1 WHERE single_key &#x3D; 5 GROUP BY single_key</td>
         <td>97</td>
         <td>100.0</td>
@@ -567,7 +569,7 @@ single_key1)
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.36</td>
+        <td>0.45</td>
         <td width="500">(b) SELECT * FROM t1 WHERE single_key &gt; 5 GROUP BY single_key</td>
         <td>191503</td>
         <td>50.0</td>
@@ -576,27 +578,27 @@ single_key1)
         <td>index</td>
     </tr>
     <tr>
-        <td>0.45</td>
+        <td>0.55</td>
         <td width="500">(b) SELECT single_key FROM t1 WHERE single_key &gt; 5 GROUP BY single_key</td>
         <td>1043</td>
         <td>100.0</td>
         <td>Using where
- Using index for group-by</td>
+, Using index for group-by</td>
         <td>single_key</td>
         <td>range</td>
     </tr>
     <tr>
-        <td>0.28</td>
+        <td>0.37</td>
         <td width="500">(b) SELECT id, single_key FROM t1 WHERE single_key &gt; 5 GROUP BY single_key</td>
         <td>95751</td>
         <td>100.0</td>
         <td>Using where
- Using index</td>
+, Using index</td>
         <td>single_key</td>
         <td>range</td>
     </tr>
     <tr>
-        <td>0.27</td>
+        <td>0.50</td>
         <td width="500">(o) SELECT id, single_key, col_not_index FROM t1 WHERE single_key &gt; 5 GROUP BY single_key</td>
         <td>191503</td>
         <td>50.0</td>
@@ -617,7 +619,7 @@ single_key1)
         <td>range</td>
     </tr>
     <tr>
-        <td>0.22</td>
+        <td>0.28</td>
         <td width="500">(b) SELECT COUNT(DISTINCT single_key) FROM t1</td>
         <td>1936</td>
         <td>100.0</td>
@@ -626,7 +628,7 @@ single_key1)
         <td>range</td>
     </tr>
     <tr>
-        <td>0.22</td>
+        <td>0.34</td>
         <td width="500">(b) SELECT SUM(single_key) FROM t1</td>
         <td>191503</td>
         <td>100.0</td>
@@ -635,7 +637,7 @@ single_key1)
         <td>index</td>
     </tr>
     <tr>
-        <td>0.27</td>
+        <td>0.30</td>
         <td width="500">(b) SELECT SUM(single_key) FROM t1 GROUP BY single_key</td>
         <td>191503</td>
         <td>100.0</td>
@@ -644,7 +646,7 @@ single_key1)
         <td>index</td>
     </tr>
     <tr>
-        <td>0.20</td>
+        <td>0.32</td>
         <td width="500">(o) SELECT MIN(single_key) FROM t1</td>
         <td>0</td>
         <td>0.0</td>
@@ -656,7 +658,7 @@ single_key1)
         <td align="center" colspan="10">---------------</td>
     </tr>
     <tr>
-        <td>0.59</td>
+        <td>0.31</td>
         <td width="500">(b) SELECT * FROM t1 GROUP BY part_key1, part_key2</td>
         <td>191503</td>
         <td>100.0</td>
@@ -665,7 +667,7 @@ single_key1)
         <td>index</td>
     </tr>
     <tr>
-        <td>0.32</td>
+        <td>0.30</td>
         <td width="500">(b) SELECT part_key1, part_key2 FROM t1 GROUP BY part_key1, part_key2</td>
         <td>191503</td>
         <td>100.0</td>
@@ -674,7 +676,7 @@ single_key1)
         <td>index</td>
     </tr>
     <tr>
-        <td>0.22</td>
+        <td>0.44</td>
         <td width="500">(b) SELECT part_key1, part_key2, col_not_index FROM t1 GROUP BY part_key1, part_key2</td>
         <td>191503</td>
         <td>100.0</td>
@@ -683,7 +685,7 @@ single_key1)
         <td>index</td>
     </tr>
     <tr>
-        <td>0.27</td>
+        <td>0.40</td>
         <td width="500">(b) SELECT * FROM t1 WHERE part_key1 &#x3D; 5 GROUP BY part_key1, part_key2</td>
         <td>97</td>
         <td>100.0</td>
@@ -692,47 +694,47 @@ single_key1)
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.27</td>
+        <td>0.34</td>
         <td width="500">(b) SELECT part_key1, part_key2 FROM t1 WHERE part_key1 &lt; 5 GROUP BY part_key1, part_key2</td>
         <td>317</td>
         <td>100.0</td>
         <td>Using where
- Using index</td>
+, Using index</td>
         <td>part_key1_key2</td>
         <td>range</td>
     </tr>
     <tr>
-        <td>0.33</td>
+        <td>0.40</td>
         <td width="500">(b) SELECT part_key1, part_key2 FROM t1 WHERE part_key1 &gt; 5 GROUP BY part_key1, part_key2</td>
         <td>95751</td>
         <td>100.0</td>
         <td>Using where
- Using index</td>
+, Using index</td>
         <td>part_key1_key2</td>
         <td>range</td>
     </tr>
     <tr>
-        <td>0.30</td>
+        <td>0.35</td>
         <td width="500">(b) SELECT part_key1 FROM t1 WHERE part_key1 &gt; 5 GROUP BY part_key1, part_key2</td>
         <td>95751</td>
         <td>100.0</td>
         <td>Using where
- Using index</td>
+, Using index</td>
         <td>part_key1_key2</td>
         <td>range</td>
     </tr>
     <tr>
-        <td>0.31</td>
+        <td>0.46</td>
         <td width="500">(b) SELECT part_key1 FROM t1 WHERE part_key1 &#x3D; 5 AND part_key2 &gt; 12 GROUP BY part_key1, part_key2</td>
         <td>91</td>
         <td>100.0</td>
         <td>Using where
- Using index</td>
+, Using index</td>
         <td>part_key1_key2</td>
         <td>range</td>
     </tr>
     <tr>
-        <td>0.29</td>
+        <td>0.63</td>
         <td width="500">(o) SELECT part_key1 FROM t1 WHERE part_key1 &#x3D; 5 GROUP BY part_key1, part_key2</td>
         <td>97</td>
         <td>100.0</td>
@@ -744,7 +746,7 @@ single_key1)
         <td align="center" colspan="10">---------------</td>
     </tr>
     <tr>
-        <td>0.26</td>
+        <td>0.34</td>
         <td width="500">(b) SELECT * FROM t1 WHERE part_key2 &#x3D; 5 GROUP BY part_key1</td>
         <td>191503</td>
         <td>10.0</td>
@@ -753,7 +755,7 @@ single_key1)
         <td>index</td>
     </tr>
     <tr>
-        <td>0.23</td>
+        <td>0.36</td>
         <td width="500">(b) SELECT * FROM t1 WHERE part_key1 &#x3D; 5 GROUP BY part_key1</td>
         <td>97</td>
         <td>100.0</td>
@@ -762,27 +764,27 @@ single_key1)
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.26</td>
+        <td>0.35</td>
         <td width="500">(q) SELECT part_key1, id FROM t1 WHERE part_key2 &#x3D; 5 GROUP BY part_key1</td>
         <td>191503</td>
         <td>10.0</td>
         <td>Using where
- Using index</td>
+, Using index</td>
         <td>part_key1_key2</td>
         <td>index</td>
     </tr>
     <tr>
-        <td>0.32</td>
+        <td>0.27</td>
         <td width="500">(q) SELECT part_key1, part_key2 FROM t1 WHERE part_key2 &#x3D; 5 GROUP BY part_key1</td>
         <td>1936</td>
         <td>100.0</td>
         <td>Using where
- Using index for group-by</td>
+, Using index for group-by</td>
         <td>part_key1_key2</td>
         <td>range</td>
     </tr>
     <tr>
-        <td>0.20</td>
+        <td>0.33</td>
         <td width="500">(q) SELECT part_key1, MIN(part_key2) FROM t1 GROUP BY part_key1</td>
         <td>1936</td>
         <td>100.0</td>
@@ -791,7 +793,7 @@ single_key1)
         <td>range</td>
     </tr>
     <tr>
-        <td>0.26</td>
+        <td>0.48</td>
         <td width="500">(q) SELECT part_key1, part_key2 FROM t1 WHERE col_not_index &#x3D; 5 GROUP BY part_key1</td>
         <td>191503</td>
         <td>10.0</td>
@@ -800,12 +802,12 @@ single_key1)
         <td>index</td>
     </tr>
     <tr>
-        <td>0.22</td>
+        <td>0.30</td>
         <td width="500">(o) SELECT part_key1 FROM t1 WHERE part_key2 &#x3D; 5 GROUP BY part_key1</td>
         <td>1936</td>
         <td>100.0</td>
         <td>Using where
- Using index for group-by</td>
+, Using index for group-by</td>
         <td>part_key1_key2</td>
         <td>range</td>
     </tr>
@@ -813,7 +815,7 @@ single_key1)
         <td align="center" colspan="10">---------------</td>
     </tr>
     <tr>
-        <td>0.22</td>
+        <td>0.31</td>
         <td width="500">(b) SELECT * FROM t1 GROUP BY part_key2</td>
         <td>191503</td>
         <td>100.0</td>
@@ -822,7 +824,7 @@ single_key1)
         <td>ALL</td>
     </tr>
     <tr>
-        <td>0.31</td>
+        <td>0.50</td>
         <td width="500">(b) SELECT * FROM t1 WHERE part_key1 &#x3D; 5 GROUP BY part_key2</td>
         <td>97</td>
         <td>100.0</td>
@@ -831,7 +833,7 @@ single_key1)
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.29</td>
+        <td>0.34</td>
         <td width="500">(b) SELECT part_key1, part_key2 FROM t1 WHERE part_key1 &#x3D; 5 GROUP BY part_key2</td>
         <td>97</td>
         <td>100.0</td>
@@ -840,7 +842,7 @@ single_key1)
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.22</td>
+        <td>0.30</td>
         <td width="500">(b) SELECT part_key2 FROM t1 WHERE part_key1 &#x3D; 5 GROUP BY part_key2</td>
         <td>97</td>
         <td>100.0</td>
@@ -849,29 +851,29 @@ single_key1)
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.31</td>
+        <td>0.65</td>
         <td width="500">(b) SELECT part_key2 FROM t1 WHERE part_key1 &gt; 5 GROUP BY part_key2</td>
         <td>95751</td>
         <td>100.0</td>
         <td>Using where
- Using index
- Using temporary</td>
+, Using index
+, Using temporary</td>
         <td>part_key1_key2</td>
         <td>range</td>
     </tr>
     <tr>
-        <td>0.26</td>
+        <td>0.37</td>
         <td width="500">(b) SELECT part_key2 FROM t1 WHERE part_key1 &lt; 5 GROUP BY part_key2</td>
         <td>317</td>
         <td>100.0</td>
         <td>Using where
- Using index
- Using temporary</td>
+, Using index
+, Using temporary</td>
         <td>part_key1_key2</td>
         <td>range</td>
     </tr>
     <tr>
-        <td>0.28</td>
+        <td>0.36</td>
         <td width="500">(b) SELECT part_key1 FROM t1 WHERE part_key1 &#x3D; 5 GROUP BY part_key2</td>
         <td>97</td>
         <td>100.0</td>
@@ -880,7 +882,7 @@ single_key1)
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.23</td>
+        <td>0.41</td>
         <td width="500">(o) SELECT * FROM t1 GROUP BY part_key2</td>
         <td>191503</td>
         <td>100.0</td>
