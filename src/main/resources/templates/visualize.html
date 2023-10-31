@@ -5,9 +5,16 @@
 </head>
 <body>
 <table style="border-collapse:collapse;" border=1 cellpadding=5 cellspacing=5 width="100%">
+    <col style="width:10%">
+    <col style="width:40%">
+    <col style="width:10%">
+    <col style="width:10%">
+    <col style="width:10%">
+    <col style="width:10%">
+    <col style="width:10%">
     <thead>
     <tr>
-        <th colspan="9" style="background-color:aliceblue;">Request Profiling</th>
+        <th colspan="7" style="background-color:aliceblue;">Request Profiling</th>
     </tr>
     <tr style="background-color: paleturquoise">
         <th>Duration<br/>(milisecs)</th>
@@ -24,26 +31,26 @@
     {{#isBadQuery}}
     <tr>
         <td>{{durationInMs}}</td>
-        <td style="width:40%">{{sqlOrigin}}</td>
+        <td>{{sqlOrigin}}</td>
         {{#explain}}
         <td>{{rows}}</td>
         <td>{{filtered}}</td>
-        <td style="width:5%">{{extra}}</td>
-        <td style="width:5%">{{key}}</td>
-        <td style="width:5%">{{type}}</td>
+        <td>{{extra}}</td>
+        <td>{{key}}</td>
+        <td>{{type}}</td>
         {{/explain}}
     </tr>
     {{/isBadQuery}}
     {{^isBadQuery}}
     <tr>
         <td>{{durationInMs}}</td>
-        <td style="width:40%">{{sqlOrigin}}</td>
+        <td>{{sqlOrigin}}</td>
         {{#explain}}
         <td>{{rows}}</td>
         <td>{{filtered}}</td>
-        <td style="width:30px">{{extra}}</td>
-        <td style="width:30px">{{key}}</td>
-        <td style="width:30px">{{type}}</td>
+        <td>{{extra}}</td>
+        <td>{{key}}</td>
+        <td>{{type}}</td>
         {{/explain}}
     </tr>
     <tr style="height:2px">
