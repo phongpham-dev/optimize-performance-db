@@ -70,6 +70,6 @@ public class ExplainData {
     public String addSpace1(String text) {
         String regex = "(,|;)";
         var arr = Arrays.stream(text.split(regex)).toList();
-        return StringUtils.collectionToDelimitedString(arr, "\n,");
+        return StringUtils.collectionToDelimitedString(arr, ",\n");
     }
 }
