@@ -20,4 +20,11 @@ public class VisualizationController {
         model.addAllAttributes(sqlStatementStatistics.getMonitorHtml());
         return "visualize";
     }
+
+    @GetMapping("/all")
+    public String monitorAll(Model model) {
+        System.out.println("controller " + sqlStatementStatistics.getMonitorHtml());
+        model.addAllAttributes(sqlStatementStatistics.getMonitorHtml());
+        return "visualize";
+    }
 }

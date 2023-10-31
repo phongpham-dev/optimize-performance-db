@@ -24,12 +24,15 @@ public class ApplicationConfig {
             String[] productLineList = {"M", "R", "S", "T"};
             Integer[] categories = {1, 2, 3, 4, 5};
             String[] colors = {"red", "yellow", "blue", "black", "while", "orange"};
+            String str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            char[] arrStr = str.toCharArray();
             var products = IntStream.range(1, 200000).mapToObj(i -> Product.builder()
-                    .name("name " + i)
+                    .name("name" + i)
                     .productNumber("PN-" + i)
                     .makeFlag(random.nextBoolean())
                     .color(colors[random.nextInt(colors.length)])
                     .listPrice(1 + (2000 - 1) * random.nextDouble())
+                    .colNotIndex(1 + (2000 - 1) * random.nextDouble())
                     .size(sizeList[random.nextInt(sizeList.length)])
                     .weight(1 + (200 - 1) * random.nextDouble())
                     .productLine(productLineList[random.nextInt(productLineList.length)])

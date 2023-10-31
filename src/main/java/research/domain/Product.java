@@ -30,6 +30,9 @@ public class Product {
     @Column(name = "list_price")
     private Double listPrice;
 
+    @Column(name = "col_not_index")
+    private Double colNotIndex;
+
     @Column(name = "size")
     private String size;
 
