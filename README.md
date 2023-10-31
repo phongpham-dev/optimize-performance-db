@@ -34,7 +34,7 @@
     <tbody style="text-align: right">
     <tr>
         <td>0.43</td>
-        <td style="text-align:right">(q) SELECT * FROM t1 WHERE primary_key &#x3D; 1</td>
+        <td style="text-align:left">(q) SELECT * FROM t1 WHERE primary_key &#x3D; 1</td>
         <td>1</td>
         <td>100.0</td>
         <td></td>
