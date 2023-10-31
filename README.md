@@ -25,9 +25,9 @@ CREATE TABLE IF NOT EXISTS `t2` (
 ```
 
 ## Optimizing at the database level
-Attempt | #1 | #2 | #3 | #4 | #5 | #6 | #7
---- | --- | --- | --- |--- |--- |--- |--- 
-Seconds | 301 | 283 | 290 | 286 | 289 | 285 | 287
+| #1  | #2 | #3  | #4 | #5 | #6 | #7
+|-----| --- |-----|--- |--- |--- |--- 
+0.451|(b) SELECT part_key1, part_key2 FROM t1 WHERE part_key1 = 5 GROUP BY part_key2|97|100.0|Using index|part_key1_key2|ref
 
 
 ## Optimizing at the database level

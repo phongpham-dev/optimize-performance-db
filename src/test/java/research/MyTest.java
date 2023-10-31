@@ -3,9 +3,11 @@ package research;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
+import org.assertj.core.api.ThrowableAssert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ResourceLoader;
 import research.domain.Product;
 import research.domain.StatementHistoryEvent;
 import research.domain.mysql.ExplainData;
@@ -13,6 +15,10 @@ import research.repository.EventHolder;
 import research.repository.ProductRepository;
 import research.service.SQLStatementStatistics;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -56,10 +62,38 @@ public class MyTest {
         System.out.println(objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(event));
     }
 
+    @Autowired
+    ResourceLoader resourceLoader;
+
     @Test
-    public void statisticsWhere() {
-       var rs =  sqlStatementStatistics.getMonitorHtml();
-        System.out.println(rs);
+    public void statisticsWhere() throws IOException, InterruptedException {
+        try {
+            var resource = resourceLoader.getResource("classpath:/export.txt");
+            var file = resource.getFile();
+            file.createNewFile();
+
+            FileWriter fileWriter = new FileWriter(resource.getFile());
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+            bufferedWriter.write("hello");
+            bufferedWriter.append("acasdasddasdasd");
+
+            bufferedWriter.close();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+
+//        sqlStatementStatistics.statisticsWhere();
+//        sqlStatementStatistics.getVisualizationDatas().forEach(v -> {
+//
+//        });
         //sqlStatementStatistics.statisticsWhere();
+    }
+
+    @Test
+    public void export() {
+        sqlStatementStatistics.export();
     }
 }

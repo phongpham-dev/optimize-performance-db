@@ -4,15 +4,21 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import research.domain.VisualizationData;
 import research.domain.mysql.ExplainData;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.*;
 
 @Service
+@Getter
 public class SQLStatementStatistics {
 
     @PersistenceContext
@@ -100,7 +106,6 @@ public class SQLStatementStatistics {
                 }).toList();
         return sqlList;
     }
-
 
 
     public List<Pair<String, String>> whereSql() {
@@ -462,8 +467,7 @@ public class SQLStatementStatistics {
                             .replaceAll("single_key1", "product_subcategory_id")
                             .replaceAll("single_key", "list_price")
                             .replaceAll("t1", "product")
-                            .replaceAll("t2", "category")
-                            ;
+                            .replaceAll("t2", "category");
 
                     return Pair.of(v, sql);
                 }).toList();
@@ -567,10 +571,10 @@ public class SQLStatementStatistics {
 
         });
     }
+
     public Map<String, Object> getMonitorHtml() {
         var listItem = visualizationDatas.stream()
                 .map(v -> {
-                    System.out.println("statis " + v);
                     return Map.of(
                             "isBadQuery", v.getIsBadQuery(),
                             "durationInMs", String.format("%.2f", v.getDurationInMs()),
@@ -586,4 +590,43 @@ public class SQLStatementStatistics {
                 "listItem", listItem
         );
     }
+
+    public void export() {
+        statisticsWhere();
+        try {
+            File file = new File("/Users/phong/working/research/optimize-performance-db/test.txt");
+            file.createNewFile();
+
+            FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+            visualizationDatas.forEach(v -> {
+
+                var list = List.of(
+                        Optional.ofNullable(v.getDurationInMs()).orElse(0d),
+                        Optional.ofNullable(v.getSqlOrigin()).orElse(""),
+                        Optional.ofNullable(v.getExplain().getRows()).orElse(0L),
+                        Optional.ofNullable(v.getExplain().getFiltered()).orElse(0f),
+                        Optional.ofNullable(v.getExplain().getExtra()).orElse(""),
+                        Optional.ofNullable(v.getExplain().getKey()).orElse(""),
+                        Optional.ofNullable(v.getExplain().getType()).orElse("")
+                );
+
+                var l = list.stream().map(o -> o.toString()).toList();
+                System.out.println(StringUtils.collectionToDelimitedString(l, "|"));
+                //System.out.println( l.toString().replaceAll(",", "|"));
+
+            });
+
+            bufferedWriter.write("hellos");
+            bufferedWriter.append("acasdasddasdasdasd");
+
+            bufferedWriter.close();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
 }
