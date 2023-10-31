@@ -36,7 +36,7 @@
     {{#isBadQuery}}
     <tr>
         <td>{{durationInMs}}</td>
-        <td>{{sqlOrigin}}</td>
+        <td width="500">{{sqlOrigin}}</td>
         {{#explain}}
         <td>{{rows}}</td>
         <td>{{filtered}}</td>
@@ -49,7 +49,7 @@
     {{^isBadQuery}}
     <tr>
         <td>{{durationInMs}}</td>
-        <td>{{sqlOrigin}}</td>
+        <td width="500">{{sqlOrigin}}</td>
         {{#explain}}
         <td>{{rows}}</td>
         <td>{{filtered}}</td>
