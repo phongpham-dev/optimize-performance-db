@@ -47,7 +47,7 @@ public class ExplainData {
         System.out.println("addspace " + addSpace1(Optional.ofNullable(extra).orElse("")));
         return Map.of(
                 "rows", Optional.ofNullable(rows).orElse(0L),
-                "extra", addSpace(Optional.ofNullable(extra).orElse("")),
+                "extra", addSpace1(Optional.ofNullable(extra).orElse("")),
                 "selectType", Optional.ofNullable(selectType).orElse(""),
                 "type", Optional.ofNullable(type).orElse(""),
                 "possibleKeys", Optional.ofNullable(possibleKeys).orElse(""),

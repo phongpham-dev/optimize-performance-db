@@ -28,7 +28,7 @@
     </thead>
     <tbody style="text-align: right">
     <tr>
-        <td>0.40</td>
+        <td>0.88</td>
         <td width="500">(q) SELECT * FROM t1 WHERE primary_key &#x3D; 1</td>
         <td>1</td>
         <td>100.0</td>
@@ -37,55 +37,29 @@
         <td>const</td>
     </tr>
     <tr>
-        <td>0.28</td>
+        <td>0.24</td>
         <td width="500">(q) SELECT * FROM t1 WHERE unique_key &#x3D; &#39;name 1&#39;</td>
         <td>0</td>
         <td>0.0</td>
-        <td>no m
-atch
-ing 
-row 
-in c
-onst
- tab
-le</td>
+        <td>no matching row in const table</td>
         <td></td>
         <td></td>
     </tr>
     <tr>
-        <td>0.22</td>
+        <td>0.30</td>
         <td width="500">(q) SELECT * FROM t1 WHERE unique_key &#x3D; &#39;name 1&#39;</td>
         <td>0</td>
         <td>0.0</td>
-        <td>no m
-atch
-ing 
-row 
-in c
-onst
- tab
-le</td>
+        <td>no matching row in const table</td>
         <td></td>
         <td></td>
     </tr>
     <tr>
-        <td>0.27</td>
+        <td>0.26</td>
         <td width="500">(o) SELECT * FROM t1 WHERE primary_key &#x3D; 1 AND unique_key &#x3D; &#39;name 1&#39;</td>
         <td>0</td>
         <td>0.0</td>
-        <td>Impo
-ssib
-le W
-HERE
- not
-iced
- aft
-er r
-eadi
-ng c
-onst
- tab
-les</td>
+        <td>Impossible WHERE noticed after reading const tables</td>
         <td></td>
         <td></td>
     </tr>
@@ -93,78 +67,51 @@ les</td>
         <td align="center" colspan="10">---------------</td>
     </tr>
     <tr>
-        <td>0.55</td>
+        <td>0.36</td>
         <td width="500">(q) SELECT * FROM t1 WHERE single_key &#x3D; 50 OR single_key1 &#x3D; 2</td>
         <td>76937</td>
         <td>100.0</td>
-        <td>Usin
-g un
-ion(
-sing
-le_k
-ey,s
-ingl
-e_ke
-y1);
- Usi
-ng w
-here</td>
+        <td>Using union(single_key
+single_key1)
+ Using where</td>
         <td>single_key,single_key1</td>
         <td>index_merge</td>
     </tr>
     <tr>
-        <td>0.63</td>
+        <td>0.40</td>
         <td width="500">(q) SELECT * FROM t1 WHERE single_key &lt; 50 OR single_key1 &lt; 2</td>
         <td>191503</td>
         <td>55.55</td>
-        <td>Usin
-g wh
-ere</td>
+        <td>Using where</td>
         <td></td>
         <td>ALL</td>
     </tr>
     <tr>
-        <td>0.35</td>
+        <td>0.36</td>
         <td width="500">(q) SELECT * FROM t1 WHERE single_key &#x3D; 50 AND single_key1 &#x3D; 2</td>
         <td>104</td>
         <td>40.14</td>
-        <td>Usin
-g wh
-ere</td>
+        <td>Using where</td>
         <td>single_key</td>
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.70</td>
+        <td>0.36</td>
         <td width="500">(q) SELECT * FROM t1 WHERE (single_key &#x3D; 50 AND col_not_index &#x3D; 50) OR single_key1 &#x3D; 2</td>
         <td>76937</td>
         <td>100.0</td>
-        <td>Usin
-g un
-ion(
-sing
-le_k
-ey,s
-ingl
-e_ke
-y1);
- Usi
-ng w
-here</td>
+        <td>Using union(single_key
+single_key1)
+ Using where</td>
         <td>single_key,single_key1</td>
         <td>index_merge</td>
     </tr>
     <tr>
-        <td>0.33</td>
+        <td>0.35</td>
         <td width="500">(o) SELECT * FROM t1 WHERE primary_key &lt; 50 AND single_key &#x3D; 5</td>
         <td>1</td>
         <td>100.0</td>
-        <td>Usin
-g in
-dex 
-cond
-itio
-n</td>
+        <td>Using index condition</td>
         <td>single_key</td>
         <td>range</td>
     </tr>
@@ -172,18 +119,16 @@ n</td>
         <td align="center" colspan="10">---------------</td>
     </tr>
     <tr>
-        <td>0.27</td>
+        <td>0.26</td>
         <td width="500">(b) SELECT * FROM t1 WHERE col_not_index &#x3D; 500</td>
         <td>191503</td>
         <td>10.0</td>
-        <td>Usin
-g wh
-ere</td>
+        <td>Using where</td>
         <td></td>
         <td>ALL</td>
     </tr>
     <tr>
-        <td>0.27</td>
+        <td>0.28</td>
         <td width="500">(q) SELECT * FROM t1 WHERE single_key &#x3D; 3</td>
         <td>88</td>
         <td>100.0</td>
@@ -192,24 +137,20 @@ ere</td>
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.30</td>
+        <td>0.23</td>
         <td width="500">(q) SELECT single_key FROM t1 WHERE single_key &#x3D; 3</td>
         <td>88</td>
         <td>100.0</td>
-        <td>Usin
-g in
-dex</td>
+        <td>Using index</td>
         <td>single_key</td>
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.30</td>
+        <td>0.25</td>
         <td width="500">(q) SELECT * FROM t1 WHERE single_key &#x3D; 3 OR col_not_index &#x3D; 50</td>
         <td>191503</td>
         <td>19.0</td>
-        <td>Usin
-g wh
-ere</td>
+        <td>Using where</td>
         <td></td>
         <td>ALL</td>
     </tr>
@@ -218,48 +159,35 @@ ere</td>
         <td width="500">(q) SELECT * FROM t1 WHERE single_key &#x3D; 3 AND col_not_index &#x3D; 50</td>
         <td>88</td>
         <td>10.0</td>
-        <td>Usin
-g wh
-ere</td>
+        <td>Using where</td>
         <td>single_key</td>
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.32</td>
+        <td>0.23</td>
         <td width="500">(q) SELECT * FROM t1 WHERE single_key &gt; 5</td>
         <td>191503</td>
         <td>50.0</td>
-        <td>Usin
-g wh
-ere</td>
+        <td>Using where</td>
         <td></td>
         <td>ALL</td>
     </tr>
     <tr>
-        <td>0.31</td>
+        <td>0.26</td>
         <td width="500">(q) SELECT single_key FROM t1 WHERE single_key &gt; 5</td>
         <td>95751</td>
         <td>100.0</td>
-        <td>Usin
-g wh
-ere;
- Usi
-ng i
-ndex</td>
+        <td>Using where
+ Using index</td>
         <td>single_key</td>
         <td>range</td>
     </tr>
     <tr>
-        <td>0.20</td>
+        <td>0.19</td>
         <td width="500">(q) SELECT * FROM t1 WHERE single_key &lt; 5</td>
         <td>317</td>
         <td>100.0</td>
-        <td>Usin
-g in
-dex 
-cond
-itio
-n</td>
+        <td>Using index condition</td>
         <td>single_key</td>
         <td>range</td>
     </tr>
@@ -268,12 +196,8 @@ n</td>
         <td width="500">(o) SELECT single_key FROM t1 WHERE single_key &lt; 5</td>
         <td>317</td>
         <td>100.0</td>
-        <td>Usin
-g wh
-ere;
- Usi
-ng i
-ndex</td>
+        <td>Using where
+ Using index</td>
         <td>single_key</td>
         <td>range</td>
     </tr>
@@ -281,40 +205,34 @@ ndex</td>
         <td align="center" colspan="10">---------------</td>
     </tr>
     <tr>
-        <td>0.21</td>
+        <td>0.29</td>
         <td width="500">(b) SELECT * FROM t1 WHERE part_key2 &#x3D; 12</td>
         <td>191503</td>
         <td>10.0</td>
-        <td>Usin
-g wh
-ere</td>
+        <td>Using where</td>
+        <td></td>
+        <td>ALL</td>
+    </tr>
+    <tr>
+        <td>0.22</td>
+        <td width="500">(b) SELECT * FROM t1 WHERE part_key1 &#x3D; 1000 OR part_key2 &#x3D; 12</td>
+        <td>191503</td>
+        <td>19.0</td>
+        <td>Using where</td>
+        <td></td>
+        <td>ALL</td>
+    </tr>
+    <tr>
+        <td>0.23</td>
+        <td width="500">(b) SELECT * FROM t1 WHERE part_key1 &#x3D; 500 OR col_not_index &#x3D; 500</td>
+        <td>191503</td>
+        <td>19.0</td>
+        <td>Using where</td>
         <td></td>
         <td>ALL</td>
     </tr>
     <tr>
         <td>0.25</td>
-        <td width="500">(b) SELECT * FROM t1 WHERE part_key1 &#x3D; 1000 OR part_key2 &#x3D; 12</td>
-        <td>191503</td>
-        <td>19.0</td>
-        <td>Usin
-g wh
-ere</td>
-        <td></td>
-        <td>ALL</td>
-    </tr>
-    <tr>
-        <td>0.21</td>
-        <td width="500">(b) SELECT * FROM t1 WHERE part_key1 &#x3D; 500 OR col_not_index &#x3D; 500</td>
-        <td>191503</td>
-        <td>19.0</td>
-        <td>Usin
-g wh
-ere</td>
-        <td></td>
-        <td>ALL</td>
-    </tr>
-    <tr>
-        <td>0.31</td>
         <td width="500">(q) SELECT * FROM t1 WHERE part_key1 &#x3D; 500</td>
         <td>99</td>
         <td>100.0</td>
@@ -323,7 +241,7 @@ ere</td>
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.31</td>
+        <td>0.23</td>
         <td width="500">(q) SELECT * FROM t1 WHERE part_key1 &#x3D; 1000 AND part_key2 &#x3D; 12</td>
         <td>1</td>
         <td>100.0</td>
@@ -332,27 +250,20 @@ ere</td>
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.29</td>
+        <td>0.24</td>
         <td width="500">(q) SELECT * FROM t1 WHERE part_key1 &#x3D; 1000 AND part_key2 &gt; 12</td>
         <td>112</td>
         <td>33.33</td>
-        <td>Usin
-g wh
-ere</td>
+        <td>Using where</td>
         <td>single_key</td>
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.26</td>
+        <td>0.29</td>
         <td width="500">(o) SELECT * FROM t1 WHERE part_key1 &#x3D; 1000 AND part_key2 &lt; 12</td>
         <td>6</td>
         <td>100.0</td>
-        <td>Usin
-g in
-dex 
-cond
-itio
-n</td>
+        <td>Using index condition</td>
         <td>part_key1_key2</td>
         <td>range</td>
     </tr>
@@ -360,100 +271,66 @@ n</td>
         <td align="center" colspan="10">---------------</td>
     </tr>
     <tr>
-        <td>0.19</td>
+        <td>0.22</td>
         <td width="500">(b) SELECT * FROM t1 WHERE col_not_index &gt;&#x3D; 1 AND col_not_index &lt; 5</td>
         <td>191503</td>
         <td>11.11</td>
-        <td>Usin
-g wh
-ere</td>
+        <td>Using where</td>
         <td></td>
         <td>ALL</td>
     </tr>
     <tr>
-        <td>0.35</td>
+        <td>0.29</td>
         <td width="500">(q) SELECT * FROM t1 WHERE single_key &gt;&#x3D; 1 AND single_key &lt; 5</td>
         <td>317</td>
         <td>100.0</td>
-        <td>Usin
-g in
-dex 
-cond
-itio
-n</td>
+        <td>Using index condition</td>
+        <td>single_key</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.27</td>
+        <td width="500">(q) SELECT * FROM t1 WHERE single_key &gt;&#x3D; 1 AND single_key &lt; 5 AND col_not_index &#x3D; 50</td>
+        <td>317</td>
+        <td>10.0</td>
+        <td>Using index condition
+ Using where</td>
+        <td>single_key</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.26</td>
+        <td width="500">(q) SELECT * FROM t1 WHERE single_key IN(1, 2, 3, 4)</td>
+        <td>317</td>
+        <td>100.0</td>
+        <td>Using index condition</td>
+        <td>single_key</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.36</td>
+        <td width="500">(q) SELECT * FROM t1 WHERE single_key &#x3D; 1 OR single_key &#x3D; 2</td>
+        <td>140</td>
+        <td>100.0</td>
+        <td>Using index condition</td>
+        <td>single_key</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.28</td>
+        <td width="500">(q) SELECT * FROM t1 WHERE single_key &lt; 5</td>
+        <td>317</td>
+        <td>100.0</td>
+        <td>Using index condition</td>
         <td>single_key</td>
         <td>range</td>
     </tr>
     <tr>
         <td>0.23</td>
-        <td width="500">(q) SELECT * FROM t1 WHERE single_key &gt;&#x3D; 1 AND single_key &lt; 5 AND col_not_index &#x3D; 50</td>
-        <td>317</td>
-        <td>10.0</td>
-        <td>Usin
-g in
-dex 
-cond
-itio
-n; U
-sing
- whe
-re</td>
-        <td>single_key</td>
-        <td>range</td>
-    </tr>
-    <tr>
-        <td>0.24</td>
-        <td width="500">(q) SELECT * FROM t1 WHERE single_key IN(1, 2, 3, 4)</td>
-        <td>317</td>
-        <td>100.0</td>
-        <td>Usin
-g in
-dex 
-cond
-itio
-n</td>
-        <td>single_key</td>
-        <td>range</td>
-    </tr>
-    <tr>
-        <td>0.24</td>
-        <td width="500">(q) SELECT * FROM t1 WHERE single_key &#x3D; 1 OR single_key &#x3D; 2</td>
-        <td>140</td>
-        <td>100.0</td>
-        <td>Usin
-g in
-dex 
-cond
-itio
-n</td>
-        <td>single_key</td>
-        <td>range</td>
-    </tr>
-    <tr>
-        <td>0.19</td>
-        <td width="500">(q) SELECT * FROM t1 WHERE single_key &lt; 5</td>
-        <td>317</td>
-        <td>100.0</td>
-        <td>Usin
-g in
-dex 
-cond
-itio
-n</td>
-        <td>single_key</td>
-        <td>range</td>
-    </tr>
-    <tr>
-        <td>0.17</td>
         <td width="500">(o) SELECT * FROM t1 WHERE single_key BETWEEN 1 AND 4</td>
         <td>317</td>
         <td>100.0</td>
-        <td>Usin
-g in
-dex 
-cond
-itio
-n</td>
+        <td>Using index condition</td>
         <td>single_key</td>
         <td>range</td>
     </tr>
@@ -461,24 +338,20 @@ n</td>
         <td align="center" colspan="10">---------------</td>
     </tr>
     <tr>
-        <td>0.20</td>
+        <td>0.23</td>
         <td width="500">(b) SELECT * FROM t1 WHERE single_key_as_string LIKE &#39;%1&#39;</td>
         <td>191503</td>
         <td>11.11</td>
-        <td>Usin
-g wh
-ere</td>
+        <td>Using where</td>
         <td></td>
         <td>ALL</td>
     </tr>
     <tr>
-        <td>0.33</td>
+        <td>0.27</td>
         <td width="500">(o) SELECT * FROM t1 WHERE single_key_as_string LIKE &#39;name1%&#39;</td>
         <td>191503</td>
         <td>50.0</td>
-        <td>Usin
-g wh
-ere</td>
+        <td>Using where</td>
         <td></td>
         <td>ALL</td>
     </tr>
@@ -486,58 +359,44 @@ ere</td>
         <td align="center" colspan="10">---------------</td>
     </tr>
     <tr>
-        <td>0.17</td>
+        <td>0.21</td>
         <td width="500">(b) SELECT * FROM t1 ORDER BY single_key</td>
         <td>191503</td>
         <td>100.0</td>
-        <td>Usin
-g fi
-leso
-rt</td>
+        <td>Using filesort</td>
         <td></td>
         <td>ALL</td>
     </tr>
     <tr>
-        <td>0.28</td>
+        <td>0.21</td>
         <td width="500">(q) SELECT single_key FROM t1 ORDER BY single_key</td>
         <td>191503</td>
         <td>100.0</td>
-        <td>Usin
-g in
-dex</td>
+        <td>Using index</td>
         <td>single_key</td>
         <td>index</td>
     </tr>
     <tr>
-        <td>0.17</td>
+        <td>0.23</td>
         <td width="500">(q) SELECT * FROM t1 ORDER BY single_key DESC LIMIT 100</td>
         <td>100</td>
         <td>100.0</td>
-        <td>Back
-ward
- ind
-ex s
-can</td>
+        <td>Backward index scan</td>
         <td>single_key</td>
         <td>index</td>
     </tr>
     <tr>
-        <td>0.26</td>
+        <td>0.29</td>
         <td width="500">(b) SELECT * FROM t1 WHERE single_key &gt; 5 ORDER BY single_key DESC</td>
         <td>191503</td>
         <td>50.0</td>
-        <td>Usin
-g wh
-ere;
- Usi
-ng f
-iles
-ort</td>
+        <td>Using where
+ Using filesort</td>
         <td></td>
         <td>ALL</td>
     </tr>
     <tr>
-        <td>0.20</td>
+        <td>0.27</td>
         <td width="500">(q) SELECT * FROM t1 WHERE single_key &#x3D; 3 ORDER BY single_key DESC</td>
         <td>88</td>
         <td>100.0</td>
@@ -546,41 +405,30 @@ ort</td>
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.21</td>
+        <td>0.27</td>
         <td width="500">(b) SELECT single_key FROM t1 WHERE single_key &#x3D; 3 ORDER BY single_key DESC</td>
         <td>88</td>
         <td>100.0</td>
-        <td>Usin
-g in
-dex</td>
+        <td>Using index</td>
         <td>single_key</td>
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.22</td>
+        <td>0.26</td>
         <td width="500">(b) SELECT * FROM t1 WHERE single_key &lt; 5 ORDER BY single_key</td>
         <td>317</td>
         <td>100.0</td>
-        <td>Usin
-g in
-dex 
-cond
-itio
-n</td>
+        <td>Using index condition</td>
         <td>single_key</td>
         <td>range</td>
     </tr>
     <tr>
-        <td>0.21</td>
+        <td>0.46</td>
         <td width="500">(o) SELECT single_key FROM t1 WHERE single_key &lt; 5 ORDER BY single_key</td>
         <td>317</td>
         <td>100.0</td>
-        <td>Usin
-g wh
-ere;
- Usi
-ng i
-ndex</td>
+        <td>Using where
+ Using index</td>
         <td>single_key</td>
         <td>range</td>
     </tr>
@@ -588,45 +436,34 @@ ndex</td>
         <td align="center" colspan="10">---------------</td>
     </tr>
     <tr>
-        <td>0.19</td>
+        <td>0.24</td>
         <td width="500">(q) SELECT * FROM t1 ORDER BY part_key1, part_key2</td>
         <td>191503</td>
         <td>100.0</td>
-        <td>Usin
-g fi
-leso
-rt</td>
+        <td>Using filesort</td>
         <td></td>
         <td>ALL</td>
     </tr>
     <tr>
-        <td>0.24</td>
+        <td>0.28</td>
         <td width="500">(q) SELECT * FROM t1 WHERE part_key1 &#x3D; 2 ORDER BY part_key1 DESC, part_key2 DESC LIMIT 100</td>
         <td>97</td>
         <td>100.0</td>
-        <td>Back
-ward
- ind
-ex s
-can</td>
+        <td>Backward index scan</td>
         <td>part_key1_key2</td>
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.20</td>
+        <td>0.22</td>
         <td width="500">(q) SELECT * FROM t1 ORDER BY part_key1 DESC, part_key2 DESC LIMIT 100</td>
         <td>100</td>
         <td>100.0</td>
-        <td>Back
-ward
- ind
-ex s
-can</td>
+        <td>Backward index scan</td>
         <td>part_key1_key2</td>
         <td>index</td>
     </tr>
     <tr>
-        <td>0.25</td>
+        <td>0.24</td>
         <td width="500">(q) SELECT * FROM t1 ORDER BY part_key1 ASC, part_key2 ASC LIMIT 100</td>
         <td>100</td>
         <td>100.0</td>
@@ -635,7 +472,7 @@ can</td>
         <td>index</td>
     </tr>
     <tr>
-        <td>0.26</td>
+        <td>0.30</td>
         <td width="500">(q) SELECT * FROM t1 WHERE part_key1 &#x3D; 2 ORDER BY part_key2</td>
         <td>97</td>
         <td>100.0</td>
@@ -644,30 +481,20 @@ can</td>
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.29</td>
+        <td>0.35</td>
         <td width="500">(q) SELECT * FROM t1 WHERE part_key1 &#x3D; 2 AND part_key2 &gt; 12 ORDER BY part_key2</td>
         <td>93</td>
         <td>100.0</td>
-        <td>Usin
-g in
-dex 
-cond
-itio
-n</td>
+        <td>Using index condition</td>
         <td>part_key1_key2</td>
         <td>range</td>
     </tr>
     <tr>
-        <td>0.26</td>
+        <td>0.34</td>
         <td width="500">(o) SELECT * FROM t1 WHERE part_key1 &#x3D; 2 AND part_key2 &lt; 12 ORDER BY part_key2</td>
         <td>3</td>
         <td>100.0</td>
-        <td>Usin
-g in
-dex 
-cond
-itio
-n</td>
+        <td>Using index condition</td>
         <td>part_key1_key2</td>
         <td>range</td>
     </tr>
@@ -675,22 +502,17 @@ n</td>
         <td align="center" colspan="10">---------------</td>
     </tr>
     <tr>
-        <td>0.25</td>
+        <td>0.28</td>
         <td width="500">(b) SELECT col_not_index FROM t1 WHERE col_not_index &gt; 5 GROUP BY col_not_index</td>
         <td>191503</td>
         <td>33.33</td>
-        <td>Usin
-g wh
-ere;
- Usi
-ng t
-empo
-rary</td>
+        <td>Using where
+ Using temporary</td>
         <td></td>
         <td>ALL</td>
     </tr>
     <tr>
-        <td>0.20</td>
+        <td>0.24</td>
         <td width="500">(b) SELECT * FROM t1 GROUP BY single_key</td>
         <td>191503</td>
         <td>100.0</td>
@@ -699,49 +521,35 @@ rary</td>
         <td>index</td>
     </tr>
     <tr>
-        <td>0.23</td>
+        <td>0.26</td>
         <td width="500">(b) SELECT single_key FROM t1 GROUP BY single_key</td>
         <td>1936</td>
         <td>100.0</td>
-        <td>Usin
-g in
-dex 
-for 
-grou
-p-by</td>
+        <td>Using index for group-by</td>
         <td>part_key1_key2</td>
         <td>range</td>
     </tr>
     <tr>
-        <td>0.56</td>
+        <td>0.31</td>
         <td width="500">(b) SELECT * FROM t1 WHERE single_key &lt; 5 GROUP BY single_key</td>
         <td>317</td>
         <td>100.0</td>
-        <td>Usin
-g in
-dex 
-cond
-itio
-n</td>
+        <td>Using index condition</td>
         <td>single_key</td>
         <td>range</td>
     </tr>
     <tr>
-        <td>0.35</td>
+        <td>0.37</td>
         <td width="500">(b) SELECT single_key FROM t1 WHERE single_key &lt; 5 GROUP BY single_key</td>
         <td>317</td>
         <td>100.0</td>
-        <td>Usin
-g wh
-ere;
- Usi
-ng i
-ndex</td>
+        <td>Using where
+ Using index</td>
         <td>single_key</td>
         <td>range</td>
     </tr>
     <tr>
-        <td>0.30</td>
+        <td>0.29</td>
         <td width="500">(b) SELECT * FROM t1 WHERE single_key &#x3D; 5 GROUP BY single_key</td>
         <td>97</td>
         <td>100.0</td>
@@ -750,56 +558,40 @@ ndex</td>
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.26</td>
+        <td>0.29</td>
         <td width="500">(b) SELECT single_key FROM t1 WHERE single_key &#x3D; 5 GROUP BY single_key</td>
         <td>97</td>
         <td>100.0</td>
-        <td>Usin
-g in
-dex</td>
+        <td>Using index</td>
         <td>single_key</td>
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.37</td>
+        <td>0.36</td>
         <td width="500">(b) SELECT * FROM t1 WHERE single_key &gt; 5 GROUP BY single_key</td>
         <td>191503</td>
         <td>50.0</td>
-        <td>Usin
-g wh
-ere</td>
+        <td>Using where</td>
         <td>single_key</td>
         <td>index</td>
     </tr>
     <tr>
-        <td>0.37</td>
+        <td>0.45</td>
         <td width="500">(b) SELECT single_key FROM t1 WHERE single_key &gt; 5 GROUP BY single_key</td>
         <td>1043</td>
         <td>100.0</td>
-        <td>Usin
-g wh
-ere;
- Usi
-ng i
-ndex
- for
- gro
-up-b
-y</td>
+        <td>Using where
+ Using index for group-by</td>
         <td>single_key</td>
         <td>range</td>
     </tr>
     <tr>
-        <td>0.38</td>
+        <td>0.28</td>
         <td width="500">(b) SELECT id, single_key FROM t1 WHERE single_key &gt; 5 GROUP BY single_key</td>
         <td>95751</td>
         <td>100.0</td>
-        <td>Usin
-g wh
-ere;
- Usi
-ng i
-ndex</td>
+        <td>Using where
+ Using index</td>
         <td>single_key</td>
         <td>range</td>
     </tr>
@@ -808,9 +600,7 @@ ndex</td>
         <td width="500">(o) SELECT id, single_key, col_not_index FROM t1 WHERE single_key &gt; 5 GROUP BY single_key</td>
         <td>191503</td>
         <td>50.0</td>
-        <td>Usin
-g wh
-ere</td>
+        <td>Using where</td>
         <td>single_key</td>
         <td>index</td>
     </tr>
@@ -818,67 +608,47 @@ ere</td>
         <td align="center" colspan="10">---------------</td>
     </tr>
     <tr>
-        <td>0.19</td>
+        <td>0.28</td>
         <td width="500">(b) SELECT DISTINCT single_key FROM t1</td>
         <td>1936</td>
         <td>100.0</td>
-        <td>Usin
-g in
-dex 
-for 
-grou
-p-by</td>
+        <td>Using index for group-by</td>
         <td>part_key1_key2</td>
         <td>range</td>
-    </tr>
-    <tr>
-        <td>0.26</td>
-        <td width="500">(b) SELECT COUNT(DISTINCT single_key) FROM t1</td>
-        <td>1936</td>
-        <td>100.0</td>
-        <td>Usin
-g in
-dex 
-for 
-grou
-p-by</td>
-        <td>part_key1_key2</td>
-        <td>range</td>
-    </tr>
-    <tr>
-        <td>0.27</td>
-        <td width="500">(b) SELECT SUM(single_key) FROM t1</td>
-        <td>191503</td>
-        <td>100.0</td>
-        <td>Usin
-g in
-dex</td>
-        <td>single_key</td>
-        <td>index</td>
-    </tr>
-    <tr>
-        <td>0.18</td>
-        <td width="500">(b) SELECT SUM(single_key) FROM t1 GROUP BY single_key</td>
-        <td>191503</td>
-        <td>100.0</td>
-        <td>Usin
-g in
-dex</td>
-        <td>single_key</td>
-        <td>index</td>
     </tr>
     <tr>
         <td>0.22</td>
+        <td width="500">(b) SELECT COUNT(DISTINCT single_key) FROM t1</td>
+        <td>1936</td>
+        <td>100.0</td>
+        <td>Using index for group-by</td>
+        <td>part_key1_key2</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.22</td>
+        <td width="500">(b) SELECT SUM(single_key) FROM t1</td>
+        <td>191503</td>
+        <td>100.0</td>
+        <td>Using index</td>
+        <td>single_key</td>
+        <td>index</td>
+    </tr>
+    <tr>
+        <td>0.27</td>
+        <td width="500">(b) SELECT SUM(single_key) FROM t1 GROUP BY single_key</td>
+        <td>191503</td>
+        <td>100.0</td>
+        <td>Using index</td>
+        <td>single_key</td>
+        <td>index</td>
+    </tr>
+    <tr>
+        <td>0.20</td>
         <td width="500">(o) SELECT MIN(single_key) FROM t1</td>
         <td>0</td>
         <td>0.0</td>
-        <td>Sele
-ct t
-able
-s op
-timi
-zed 
-away</td>
+        <td>Select tables optimized away</td>
         <td></td>
         <td></td>
     </tr>
@@ -886,7 +656,7 @@ away</td>
         <td align="center" colspan="10">---------------</td>
     </tr>
     <tr>
-        <td>0.22</td>
+        <td>0.59</td>
         <td width="500">(b) SELECT * FROM t1 GROUP BY part_key1, part_key2</td>
         <td>191503</td>
         <td>100.0</td>
@@ -895,18 +665,16 @@ away</td>
         <td>index</td>
     </tr>
     <tr>
-        <td>0.25</td>
+        <td>0.32</td>
         <td width="500">(b) SELECT part_key1, part_key2 FROM t1 GROUP BY part_key1, part_key2</td>
         <td>191503</td>
         <td>100.0</td>
-        <td>Usin
-g in
-dex</td>
+        <td>Using index</td>
         <td>part_key1_key2</td>
         <td>index</td>
     </tr>
     <tr>
-        <td>0.13</td>
+        <td>0.22</td>
         <td width="500">(b) SELECT part_key1, part_key2, col_not_index FROM t1 GROUP BY part_key1, part_key2</td>
         <td>191503</td>
         <td>100.0</td>
@@ -924,69 +692,51 @@ dex</td>
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.37</td>
+        <td>0.27</td>
         <td width="500">(b) SELECT part_key1, part_key2 FROM t1 WHERE part_key1 &lt; 5 GROUP BY part_key1, part_key2</td>
         <td>317</td>
         <td>100.0</td>
-        <td>Usin
-g wh
-ere;
- Usi
-ng i
-ndex</td>
-        <td>part_key1_key2</td>
-        <td>range</td>
-    </tr>
-    <tr>
-        <td>0.25</td>
-        <td width="500">(b) SELECT part_key1, part_key2 FROM t1 WHERE part_key1 &gt; 5 GROUP BY part_key1, part_key2</td>
-        <td>95751</td>
-        <td>100.0</td>
-        <td>Usin
-g wh
-ere;
- Usi
-ng i
-ndex</td>
+        <td>Using where
+ Using index</td>
         <td>part_key1_key2</td>
         <td>range</td>
     </tr>
     <tr>
         <td>0.33</td>
+        <td width="500">(b) SELECT part_key1, part_key2 FROM t1 WHERE part_key1 &gt; 5 GROUP BY part_key1, part_key2</td>
+        <td>95751</td>
+        <td>100.0</td>
+        <td>Using where
+ Using index</td>
+        <td>part_key1_key2</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.30</td>
         <td width="500">(b) SELECT part_key1 FROM t1 WHERE part_key1 &gt; 5 GROUP BY part_key1, part_key2</td>
         <td>95751</td>
         <td>100.0</td>
-        <td>Usin
-g wh
-ere;
- Usi
-ng i
-ndex</td>
+        <td>Using where
+ Using index</td>
         <td>part_key1_key2</td>
         <td>range</td>
     </tr>
     <tr>
-        <td>0.37</td>
+        <td>0.31</td>
         <td width="500">(b) SELECT part_key1 FROM t1 WHERE part_key1 &#x3D; 5 AND part_key2 &gt; 12 GROUP BY part_key1, part_key2</td>
         <td>91</td>
         <td>100.0</td>
-        <td>Usin
-g wh
-ere;
- Usi
-ng i
-ndex</td>
+        <td>Using where
+ Using index</td>
         <td>part_key1_key2</td>
         <td>range</td>
     </tr>
     <tr>
-        <td>0.24</td>
+        <td>0.29</td>
         <td width="500">(o) SELECT part_key1 FROM t1 WHERE part_key1 &#x3D; 5 GROUP BY part_key1, part_key2</td>
         <td>97</td>
         <td>100.0</td>
-        <td>Usin
-g in
-dex</td>
+        <td>Using index</td>
         <td>part_key1_key2</td>
         <td>ref</td>
     </tr>
@@ -994,18 +744,16 @@ dex</td>
         <td align="center" colspan="10">---------------</td>
     </tr>
     <tr>
-        <td>0.22</td>
+        <td>0.26</td>
         <td width="500">(b) SELECT * FROM t1 WHERE part_key2 &#x3D; 5 GROUP BY part_key1</td>
         <td>191503</td>
         <td>10.0</td>
-        <td>Usin
-g wh
-ere</td>
+        <td>Using where</td>
         <td>single_key</td>
         <td>index</td>
     </tr>
     <tr>
-        <td>0.31</td>
+        <td>0.23</td>
         <td width="500">(b) SELECT * FROM t1 WHERE part_key1 &#x3D; 5 GROUP BY part_key1</td>
         <td>97</td>
         <td>100.0</td>
@@ -1014,77 +762,50 @@ ere</td>
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.18</td>
+        <td>0.26</td>
         <td width="500">(q) SELECT part_key1, id FROM t1 WHERE part_key2 &#x3D; 5 GROUP BY part_key1</td>
         <td>191503</td>
         <td>10.0</td>
-        <td>Usin
-g wh
-ere;
- Usi
-ng i
-ndex</td>
+        <td>Using where
+ Using index</td>
         <td>part_key1_key2</td>
         <td>index</td>
     </tr>
     <tr>
-        <td>0.24</td>
+        <td>0.32</td>
         <td width="500">(q) SELECT part_key1, part_key2 FROM t1 WHERE part_key2 &#x3D; 5 GROUP BY part_key1</td>
         <td>1936</td>
         <td>100.0</td>
-        <td>Usin
-g wh
-ere;
- Usi
-ng i
-ndex
- for
- gro
-up-b
-y</td>
+        <td>Using where
+ Using index for group-by</td>
         <td>part_key1_key2</td>
         <td>range</td>
     </tr>
     <tr>
-        <td>0.21</td>
+        <td>0.20</td>
         <td width="500">(q) SELECT part_key1, MIN(part_key2) FROM t1 GROUP BY part_key1</td>
         <td>1936</td>
         <td>100.0</td>
-        <td>Usin
-g in
-dex 
-for 
-grou
-p-by</td>
+        <td>Using index for group-by</td>
         <td>part_key1_key2</td>
         <td>range</td>
     </tr>
     <tr>
-        <td>0.21</td>
+        <td>0.26</td>
         <td width="500">(q) SELECT part_key1, part_key2 FROM t1 WHERE col_not_index &#x3D; 5 GROUP BY part_key1</td>
         <td>191503</td>
         <td>10.0</td>
-        <td>Usin
-g wh
-ere</td>
+        <td>Using where</td>
         <td>single_key</td>
         <td>index</td>
     </tr>
     <tr>
-        <td>0.16</td>
+        <td>0.22</td>
         <td width="500">(o) SELECT part_key1 FROM t1 WHERE part_key2 &#x3D; 5 GROUP BY part_key1</td>
         <td>1936</td>
         <td>100.0</td>
-        <td>Usin
-g wh
-ere;
- Usi
-ng i
-ndex
- for
- gro
-up-b
-y</td>
+        <td>Using where
+ Using index for group-by</td>
         <td>part_key1_key2</td>
         <td>range</td>
     </tr>
@@ -1092,19 +813,16 @@ y</td>
         <td align="center" colspan="10">---------------</td>
     </tr>
     <tr>
-        <td>0.18</td>
+        <td>0.22</td>
         <td width="500">(b) SELECT * FROM t1 GROUP BY part_key2</td>
         <td>191503</td>
         <td>100.0</td>
-        <td>Usin
-g te
-mpor
-ary</td>
+        <td>Using temporary</td>
         <td></td>
         <td>ALL</td>
     </tr>
     <tr>
-        <td>0.24</td>
+        <td>0.31</td>
         <td width="500">(b) SELECT * FROM t1 WHERE part_key1 &#x3D; 5 GROUP BY part_key2</td>
         <td>97</td>
         <td>100.0</td>
@@ -1113,85 +831,60 @@ ary</td>
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.21</td>
+        <td>0.29</td>
         <td width="500">(b) SELECT part_key1, part_key2 FROM t1 WHERE part_key1 &#x3D; 5 GROUP BY part_key2</td>
         <td>97</td>
         <td>100.0</td>
-        <td>Usin
-g in
-dex</td>
+        <td>Using index</td>
         <td>part_key1_key2</td>
         <td>ref</td>
-    </tr>
-    <tr>
-        <td>0.18</td>
-        <td width="500">(b) SELECT part_key2 FROM t1 WHERE part_key1 &#x3D; 5 GROUP BY part_key2</td>
-        <td>97</td>
-        <td>100.0</td>
-        <td>Usin
-g in
-dex</td>
-        <td>part_key1_key2</td>
-        <td>ref</td>
-    </tr>
-    <tr>
-        <td>0.24</td>
-        <td width="500">(b) SELECT part_key2 FROM t1 WHERE part_key1 &gt; 5 GROUP BY part_key2</td>
-        <td>95751</td>
-        <td>100.0</td>
-        <td>Usin
-g wh
-ere;
- Usi
-ng i
-ndex
-; Us
-ing 
-temp
-orar
-y</td>
-        <td>part_key1_key2</td>
-        <td>range</td>
-    </tr>
-    <tr>
-        <td>0.27</td>
-        <td width="500">(b) SELECT part_key2 FROM t1 WHERE part_key1 &lt; 5 GROUP BY part_key2</td>
-        <td>317</td>
-        <td>100.0</td>
-        <td>Usin
-g wh
-ere;
- Usi
-ng i
-ndex
-; Us
-ing 
-temp
-orar
-y</td>
-        <td>part_key1_key2</td>
-        <td>range</td>
     </tr>
     <tr>
         <td>0.22</td>
-        <td width="500">(b) SELECT part_key1 FROM t1 WHERE part_key1 &#x3D; 5 GROUP BY part_key2</td>
+        <td width="500">(b) SELECT part_key2 FROM t1 WHERE part_key1 &#x3D; 5 GROUP BY part_key2</td>
         <td>97</td>
         <td>100.0</td>
-        <td>Usin
-g in
-dex</td>
+        <td>Using index</td>
         <td>part_key1_key2</td>
         <td>ref</td>
     </tr>
     <tr>
-        <td>0.17</td>
+        <td>0.31</td>
+        <td width="500">(b) SELECT part_key2 FROM t1 WHERE part_key1 &gt; 5 GROUP BY part_key2</td>
+        <td>95751</td>
+        <td>100.0</td>
+        <td>Using where
+ Using index
+ Using temporary</td>
+        <td>part_key1_key2</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.26</td>
+        <td width="500">(b) SELECT part_key2 FROM t1 WHERE part_key1 &lt; 5 GROUP BY part_key2</td>
+        <td>317</td>
+        <td>100.0</td>
+        <td>Using where
+ Using index
+ Using temporary</td>
+        <td>part_key1_key2</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.28</td>
+        <td width="500">(b) SELECT part_key1 FROM t1 WHERE part_key1 &#x3D; 5 GROUP BY part_key2</td>
+        <td>97</td>
+        <td>100.0</td>
+        <td>Using index</td>
+        <td>part_key1_key2</td>
+        <td>ref</td>
+    </tr>
+    <tr>
+        <td>0.23</td>
         <td width="500">(o) SELECT * FROM t1 GROUP BY part_key2</td>
         <td>191503</td>
         <td>100.0</td>
-        <td>Usin
-g te
-mpor
-ary</td>
+        <td>Using temporary</td>
         <td></td>
         <td>ALL</td>
     </tr>
