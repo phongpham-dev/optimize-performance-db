@@ -1,3 +1,4 @@
+## Define table
 ```text
 CREATE TABLE IF NOT EXISTS `t1` (
   `primary_key` int(11) NOT NULL AUTO_INCREMENT 
@@ -22,3 +23,18 @@ CREATE TABLE IF NOT EXISTS `t2` (
   UNIQUE KEY `unique_key` (`unique_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='High-level product categorization.';
 ```
+- Duration: thời gian chạy
+- Rows: số lượng row được duyệt
+- Key: Index được sử dụng
+- Extra:
+  + Using where: duyệt qua toàn bộ table gốc
+  + Using filesort: sort toàn bộ table gốc
+  + Using index condition: duyệt qua Index Tree và table gốc để lọc giá trị phù hợp
+  + Using index: duyệt qua Index Tree
+  + Using union: duyệt đồng thời Index Tree sau đó merge lại
+- Type:
+  + ALL: duyệt qua toàn bộ table gốc
+  + const: duyệt qua const table(dùng cho primary key và unique_key)
+  + range: duyệt qua Index Tree và lọc theo range
+  + ref: Lọc rows phù hợp với giá trị
+  + index_merge: 
