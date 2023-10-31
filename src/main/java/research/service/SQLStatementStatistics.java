@@ -2,10 +2,12 @@ package research.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.samskivert.mustache.Mustache;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.mustache.MustacheResourceTemplateLoader;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -590,6 +592,24 @@ public class SQLStatementStatistics {
                 "refreshInSecond", 2,
                 "listItem", listItem
         );
+    }
+
+    @Autowired
+    MustacheResourceTemplateLoader mustacheResourceTemplateLoader;
+
+    public void export01() throws Exception {
+        statisticsWhere();
+        var reader = mustacheResourceTemplateLoader.getTemplate("visualize");
+        var m = Mustache.compiler().compile(reader);
+        var object = getMonitorHtml();
+        var rs = m.execute(object);
+        System.out.println("template " + rs);
+
+        File file = new File("/Users/phong/working/research/optimize-performance-db/README.md");
+        FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
+        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        bufferedWriter.write(rs);
+        bufferedWriter.close();
     }
 
     public void export() {

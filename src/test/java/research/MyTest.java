@@ -96,4 +96,9 @@ public class MyTest {
     public void export() {
         sqlStatementStatistics.export();
     }
+
+    @Test
+    public void export1() throws Exception {
+        sqlStatementStatistics.export01();
+    }
 }

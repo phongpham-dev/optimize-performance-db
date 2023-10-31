@@ -1,91 +1,867 @@
-| duration | SQL text                                                                                          | Rows   | Fitered | Extra                                               | Key                    | Type        |
-|----------|---------------------------------------------------------------------------------------------------|--------|---------|-----------------------------------------------------|------------------------|-------------|
-| 0.67     | (q) SELECT * FROM t1 WHERE primary_key = 1                                                        | 1      | 100.0   |                                                     | PRIMARY                | const       |
-| 0.53     | (q) SELECT * FROM t1 WHERE unique_key = 'name 1'                                                  | 0      | 0.0     | no matching row in const table                      |                        |             |
-| 0.41     | (q) SELECT * FROM t1 WHERE unique_key = 'name 1'                                                  | 0      | 0.0     | no matching row in const table                      |                        |             |
-| 0.75     | (o) SELECT * FROM t1 WHERE primary_key = 1 AND unique_key = 'name 1'                              | 0      | 0.0     | Impossible WHERE noticed after reading const tables |                        |             |
-| 0.53     | (q) SELECT * FROM t1 WHERE single_key = 50 OR single_key1 = 2                                     | 76937  | 100.0   | Using union(single_key,single_key1); Using where    | single_key,single_key1 | index_merge |
-| 0.59     | (q) SELECT * FROM t1 WHERE single_key < 50 OR single_key1 < 2                                     | 191503 | 55.55   | Using where                                         |                        | ALL         |
-| 0.58     | (q) SELECT * FROM t1 WHERE single_key = 50 AND single_key1 = 2                                    | 104    | 40.14   | Using where                                         | single_key             | ref         |
-| 0.74     | (q) SELECT * FROM t1 WHERE (single_key = 50 AND col_not_index = 50) OR single_key1 = 2            | 76937  | 100.0   | Using union(single_key,single_key1); Using where    | single_key,single_key1 | index_merge |
-| 0.57     | (o) SELECT * FROM t1 WHERE primary_key < 50 AND single_key = 5                                    | 1      | 100.0   | Using index condition                               | single_key             | range       |
-| 0.33     | (b) SELECT * FROM t1 WHERE col_not_index = 500                                                    | 191503 | 10.0    | Using where                                         |                        | ALL         |
-| 0.68     | (q) SELECT * FROM t1 WHERE single_key = 3                                                         | 88     | 100.0   |                                                     | single_key             | ref         |
-| 0.61     | (q) SELECT single_key FROM t1 WHERE single_key = 3                                                | 88     | 100.0   | Using index                                         | single_key             | ref         |
-| 0.52     | (q) SELECT * FROM t1 WHERE single_key = 3 OR col_not_index = 50                                   | 191503 | 19.0    | Using where                                         |                        | ALL         |
-| 0.65     | (q) SELECT * FROM t1 WHERE single_key = 3 AND col_not_index = 50                                  | 88     | 10.0    | Using where                                         | single_key             | ref         |
-| 0.71     | (q) SELECT * FROM t1 WHERE single_key > 5                                                         | 191503 | 50.0    | Using where                                         |                        | ALL         |
-| 0.53     | (q) SELECT single_key FROM t1 WHERE single_key > 5                                                | 95751  | 100.0   | Using where; Using index                            | single_key             | range       |
-| 0.52     | (q) SELECT * FROM t1 WHERE single_key < 5                                                         | 317    | 100.0   | Using index condition                               | single_key             | range       |
-| 0.56     | (o) SELECT single_key FROM t1 WHERE single_key < 5                                                | 317    | 100.0   | Using where; Using index                            | single_key             | range       |
-| 0.41     | (b) SELECT * FROM t1 WHERE part_key2 = 12                                                         | 191503 | 10.0    | Using where                                         |                        | ALL         |
-| 0.36     | (b) SELECT * FROM t1 WHERE part_key1 = 1000 OR part_key2 = 12                                     | 191503 | 19.0    | Using where                                         |                        | ALL         |
-| 0.50     | (b) SELECT * FROM t1 WHERE part_key1 = 500 OR col_not_index = 500                                 | 191503 | 19.0    | Using where                                         |                        | ALL         |
-| 0.53     | (q) SELECT * FROM t1 WHERE part_key1 = 500                                                        | 99     | 100.0   |                                                     | single_key             | ref         |
-| 0.70     | (q) SELECT * FROM t1 WHERE part_key1 = 1000 AND part_key2 = 12                                    | 1      | 100.0   |                                                     | part_key1_key2         | ref         |
-| 0.50     | (q) SELECT * FROM t1 WHERE part_key1 = 1000 AND part_key2 > 12                                    | 112    | 33.33   | Using where                                         | single_key             | ref         |
-| 0.36     | (o) SELECT * FROM t1 WHERE part_key1 = 1000 AND part_key2 < 12                                    | 6      | 100.0   | Using index condition                               | part_key1_key2         | range       |
-| 0.70     | (b) SELECT * FROM t1 WHERE col_not_index >= 1 AND col_not_index < 5                               | 191503 | 11.11   | Using where                                         |                        | ALL         |
-| 0.57     | (q) SELECT * FROM t1 WHERE single_key >= 1 AND single_key < 5                                     | 317    | 100.0   | Using index condition                               | single_key             | range       |
-| 0.50     | (q) SELECT * FROM t1 WHERE single_key >= 1 AND single_key < 5 AND col_not_index = 50              | 317    | 10.0    | Using index condition; Using where                  | single_key             | range       |
-| 0.34     | (q) SELECT * FROM t1 WHERE single_key IN(1, 2, 3, 4)                                              | 317    | 100.0   | Using index condition                               | single_key             | range       |
-| 0.40     | (q) SELECT * FROM t1 WHERE single_key = 1 OR single_key = 2                                       | 140    | 100.0   | Using index condition                               | single_key             | range       |
-| 0.61     | (q) SELECT * FROM t1 WHERE single_key < 5                                                         | 317    | 100.0   | Using index condition                               | single_key             | range       |
-| 0.49     | (o) SELECT * FROM t1 WHERE single_key BETWEEN 1 AND 4                                             | 317    | 100.0   | Using index condition                               | single_key             | range       |
-| 0.39     | (b) SELECT * FROM t1 WHERE single_key_as_string LIKE '%1'                                         | 191503 | 11.11   | Using where                                         |                        | ALL         |
-| 0.38     | (o) SELECT * FROM t1 WHERE single_key_as_string LIKE 'name1%'                                     | 191503 | 50.0    | Using where                                         |                        | ALL         |
-| 0.54     | (b) SELECT * FROM t1 ORDER BY single_key                                                          | 191503 | 100.0   | Using filesort                                      |                        | ALL         |
-| 0.47     | (q) SELECT single_key FROM t1 ORDER BY single_key                                                 | 191503 | 100.0   | Using index                                         | single_key             | index       |
-| 0.41     | (q) SELECT * FROM t1 ORDER BY single_key DESC LIMIT 100                                           | 100    | 100.0   | Backward index scan                                 | single_key             | index       |
-| 0.66     | (b) SELECT * FROM t1 WHERE single_key > 5 ORDER BY single_key DESC                                | 191503 | 50.0    | Using where; Using filesort                         |                        | ALL         |
-| 0.52     | (q) SELECT * FROM t1 WHERE single_key = 3 ORDER BY single_key DESC                                | 88     | 100.0   |                                                     | single_key             | ref         |
-| 0.48     | (b) SELECT single_key FROM t1 WHERE single_key = 3 ORDER BY single_key DESC                       | 88     | 100.0   | Using index                                         | single_key             | ref         |
-| 0.40     | (b) SELECT * FROM t1 WHERE single_key < 5 ORDER BY single_key                                     | 317    | 100.0   | Using index condition                               | single_key             | range       |
-| 0.37     | (o) SELECT single_key FROM t1 WHERE single_key < 5 ORDER BY single_key                            | 317    | 100.0   | Using where; Using index                            | single_key             | range       |
-| 0.58     | (q) SELECT * FROM t1 ORDER BY part_key1, part_key2                                                | 191503 | 100.0   | Using filesort                                      |                        | ALL         |
-| 0.52     | (q) SELECT * FROM t1 WHERE part_key1 = 2 ORDER BY part_key1 DESC, part_key2 DESC LIMIT 100        | 97     | 100.0   | Backward index scan                                 | part_key1_key2         | ref         |
-| 0.33     | (q) SELECT * FROM t1 ORDER BY part_key1 DESC, part_key2 DESC LIMIT 100                            | 100    | 100.0   | Backward index scan                                 | part_key1_key2         | index       |
-| 0.33     | (q) SELECT * FROM t1 ORDER BY part_key1 ASC, part_key2 ASC LIMIT 100                              | 100    | 100.0   |                                                     | part_key1_key2         | index       |
-| 0.53     | (q) SELECT * FROM t1 WHERE part_key1 = 2 ORDER BY part_key2                                       | 97     | 100.0   |                                                     | part_key1_key2         | ref         |
-| 0.58     | (q) SELECT * FROM t1 WHERE part_key1 = 2 AND part_key2 > 12 ORDER BY part_key2                    | 93     | 100.0   | Using index condition                               | part_key1_key2         | range       |
-| 0.60     | (o) SELECT * FROM t1 WHERE part_key1 = 2 AND part_key2 < 12 ORDER BY part_key2                    | 3      | 100.0   | Using index condition                               | part_key1_key2         | range       |
-| 0.39     | (b) SELECT col_not_index FROM t1 WHERE col_not_index > 5 GROUP BY col_not_index                   | 191503 | 33.33   | Using where; Using temporary                        |                        | ALL         |
-| 0.40     | (b) SELECT * FROM t1 GROUP BY single_key                                                          | 191503 | 100.0   |                                                     | single_key             | index       |
-| 0.61     | (b) SELECT single_key FROM t1 GROUP BY single_key                                                 | 1936   | 100.0   | Using index for group-by                            | part_key1_key2         | range       |
-| 0.44     | (b) SELECT * FROM t1 WHERE single_key < 5 GROUP BY single_key                                     | 317    | 100.0   | Using index condition                               | single_key             | range       |
-| 0.46     | (b) SELECT single_key FROM t1 WHERE single_key < 5 GROUP BY single_key                            | 317    | 100.0   | Using where; Using index                            | single_key             | range       |
-| 0.39     | (b) SELECT * FROM t1 WHERE single_key = 5 GROUP BY single_key                                     | 97     | 100.0   |                                                     | single_key             | ref         |
-| 0.39     | (b) SELECT single_key FROM t1 WHERE single_key = 5 GROUP BY single_key                            | 97     | 100.0   | Using index                                         | single_key             | ref         |
-| 0.71     | (b) SELECT * FROM t1 WHERE single_key > 5 GROUP BY single_key                                     | 191503 | 50.0    | Using where                                         | single_key             | index       |
-| 0.57     | (b) SELECT single_key FROM t1 WHERE single_key > 5 GROUP BY single_key                            | 1043   | 100.0   | Using where; Using index for group-by               | single_key             | range       |
-| 0.46     | (b) SELECT id, single_key FROM t1 WHERE single_key > 5 GROUP BY single_key                        | 95751  | 100.0   | Using where; Using index                            | single_key             | range       |
-| 0.60     | (o) SELECT id, single_key, col_not_index FROM t1 WHERE single_key > 5 GROUP BY single_key         | 191503 | 50.0    | Using where                                         | single_key             | index       |
-| 0.53     | (b) SELECT DISTINCT single_key FROM t1                                                            | 1936   | 100.0   | Using index for group-by                            | part_key1_key2         | range       |
-| 0.34     | (b) SELECT COUNT(DISTINCT single_key) FROM t1                                                     | 1936   | 100.0   | Using index for group-by                            | part_key1_key2         | range       |
-| 0.25     | (b) SELECT SUM(single_key) FROM t1                                                                | 191503 | 100.0   | Using index                                         | single_key             | index       |
-| 0.28     | (b) SELECT SUM(single_key) FROM t1 GROUP BY single_key                                            | 191503 | 100.0   | Using index                                         | single_key             | index       |
-| 0.37     | (o) SELECT MIN(single_key) FROM t1                                                                | 0      | 0.0     | Select tables optimized away                        |                        |             |
-| 0.66     | (b) SELECT * FROM t1 GROUP BY part_key1, part_key2                                                | 191503 | 100.0   |                                                     | part_key1_key2         | index       |
-| 0.36     | (b) SELECT part_key1, part_key2 FROM t1 GROUP BY part_key1, part_key2                             | 191503 | 100.0   | Using index                                         | part_key1_key2         | index       |
-| 0.34     | (b) SELECT part_key1, part_key2, col_not_index FROM t1 GROUP BY part_key1, part_key2              | 191503 | 100.0   |                                                     | part_key1_key2         | index       |
-| 0.45     | (b) SELECT * FROM t1 WHERE part_key1 = 5 GROUP BY part_key1, part_key2                            | 97     | 100.0   |                                                     | part_key1_key2         | ref         |
-| 0.73     | (b) SELECT part_key1, part_key2 FROM t1 WHERE part_key1 < 5 GROUP BY part_key1, part_key2         | 317    | 100.0   | Using where; Using index                            | part_key1_key2         | range       |
-| 0.48     | (b) SELECT part_key1, part_key2 FROM t1 WHERE part_key1 > 5 GROUP BY part_key1, part_key2         | 95751  | 100.0   | Using where; Using index                            | part_key1_key2         | range       |
-| 0.55     | (b) SELECT part_key1 FROM t1 WHERE part_key1 > 5 GROUP BY part_key1, part_key2                    | 95751  | 100.0   | Using where; Using index                            | part_key1_key2         | range       |
-| 0.56     | (b) SELECT part_key1 FROM t1 WHERE part_key1 = 5 AND part_key2 > 12 GROUP BY part_key1, part_key2 | 91     | 100.0   | Using where; Using index                            | part_key1_key2         | range       |
-| 0.74     | (o) SELECT part_key1 FROM t1 WHERE part_key1 = 5 GROUP BY part_key1, part_key2                    | 97     | 100.0   | Using index                                         | part_key1_key2         | ref         |
-| 0.47     | (b) SELECT * FROM t1 WHERE part_key2 = 5 GROUP BY part_key1                                       | 191503 | 10.0    | Using where                                         | single_key             | index       |
-| 0.42     | (b) SELECT * FROM t1 WHERE part_key1 = 5 GROUP BY part_key1                                       | 97     | 100.0   |                                                     | single_key             | ref         |
-| 0.29     | (q) SELECT part_key1, id FROM t1 WHERE part_key2 = 5 GROUP BY part_key1                           | 191503 | 10.0    | Using where; Using index                            | part_key1_key2         | index       |
-| 0.33     | (q) SELECT part_key1, part_key2 FROM t1 WHERE part_key2 = 5 GROUP BY part_key1                    | 1936   | 100.0   | Using where; Using index for group-by               | part_key1_key2         | range       |
-| 0.53     | (q) SELECT part_key1, MIN(part_key2) FROM t1 GROUP BY part_key1                                   | 1936   | 100.0   | Using index for group-by                            | part_key1_key2         | range       |
-| 0.39     | (q) SELECT part_key1, part_key2 FROM t1 WHERE col_not_index = 5 GROUP BY part_key1                | 191503 | 10.0    | Using where                                         | single_key             | index       |
-| 0.31     | (o) SELECT part_key1 FROM t1 WHERE part_key2 = 5 GROUP BY part_key1                               | 1936   | 100.0   | Using where; Using index for group-by               | part_key1_key2         | range       |
-| 0.33     | (b) SELECT * FROM t1 GROUP BY part_key2                                                           | 191503 | 100.0   | Using temporary                                     |                        | ALL         |
-| 0.37     | (b) SELECT * FROM t1 WHERE part_key1 = 5 GROUP BY part_key2                                       | 97     | 100.0   |                                                     | part_key1_key2         | ref         |
-| 0.54     | (b) SELECT part_key1, part_key2 FROM t1 WHERE part_key1 = 5 GROUP BY part_key2                    | 97     | 100.0   | Using index                                         | part_key1_key2         | ref         |
-| 0.65     | (b) SELECT part_key2 FROM t1 WHERE part_key1 = 5 GROUP BY part_key2                               | 97     | 100.0   | Using index                                         | part_key1_key2         | ref         |
-| 0.57     | (b) SELECT part_key2 FROM t1 WHERE part_key1 > 5 GROUP BY part_key2                               | 95751  | 100.0   | Using where; Using index; Using temporary           | part_key1_key2         | range       |
-| 0.44     | (b) SELECT part_key2 FROM t1 WHERE part_key1 < 5 GROUP BY part_key2                               | 317    | 100.0   | Using where; Using index; Using temporary           | part_key1_key2         | range       |
-| 0.34     | (b) SELECT part_key1 FROM t1 WHERE part_key1 = 5 GROUP BY part_key2                               | 97     | 100.0   | Using index                                         | part_key1_key2         | ref         |
-| 0.77     | (o) SELECT * FROM t1 GROUP BY part_key2                                                           | 191503 | 100.0   | Using temporary                                     |                        | ALL         |
+<html>
+<meta >
+<head>
+    <title> SQL monitor - Realtime Profiler</title>
+</head>
+<body>
+<table style="border-collapse:collapse;" border=1 cellpadding=5 cellspacing=5 width="100%">
+    <thead>
+    <tr>
+        <th colspan="9" style="background-color:aliceblue;">Request Profiling</th>
+    </tr>
+    <tr style="background-color: paleturquoise">
+        <th>Duration<br/>(milisecs)</th>
+        <th>SQL text</th>
+        <th>Rows</th>
+        <th>Fitered</th>
+        <th>Extra</th>
+        <th>Key</th>
+        <th>Type</th>
+    </tr>
+    </thead>
+    <tbody style="text-align: right">
+    <tr>
+        <td>0.56</td>
+        <td>(q) SELECT * FROM t1 WHERE primary_key &#x3D; 1</td>
+        <td>1</td>
+        <td>100.0</td>
+        <td></td>
+        <td>PRIMARY</td>
+        <td>const</td>
+    </tr>
+    <tr>
+        <td>0.48</td>
+        <td>(q) SELECT * FROM t1 WHERE unique_key &#x3D; &#39;name 1&#39;</td>
+        <td>0</td>
+        <td>0.0</td>
+        <td>no matching row in const table</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>0.28</td>
+        <td>(q) SELECT * FROM t1 WHERE unique_key &#x3D; &#39;name 1&#39;</td>
+        <td>0</td>
+        <td>0.0</td>
+        <td>no matching row in const table</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>0.35</td>
+        <td>(o) SELECT * FROM t1 WHERE primary_key &#x3D; 1 AND unique_key &#x3D; &#39;name 1&#39;</td>
+        <td>0</td>
+        <td>0.0</td>
+        <td>Impossible WHERE noticed after reading const tables</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr style="height:2px">
+        <td align="center" colspan="10">---------------</td>
+    </tr>
+    <tr>
+        <td>0.64</td>
+        <td>(q) SELECT * FROM t1 WHERE single_key &#x3D; 50 OR single_key1 &#x3D; 2</td>
+        <td>76937</td>
+        <td>100.0</td>
+        <td>Using union(single_key,single_key1); Using where</td>
+        <td>single_key,single_key1</td>
+        <td>index_merge</td>
+    </tr>
+    <tr>
+        <td>0.57</td>
+        <td>(q) SELECT * FROM t1 WHERE single_key &lt; 50 OR single_key1 &lt; 2</td>
+        <td>191503</td>
+        <td>55.55</td>
+        <td>Using where</td>
+        <td></td>
+        <td>ALL</td>
+    </tr>
+    <tr>
+        <td>0.36</td>
+        <td>(q) SELECT * FROM t1 WHERE single_key &#x3D; 50 AND single_key1 &#x3D; 2</td>
+        <td>104</td>
+        <td>40.14</td>
+        <td>Using where</td>
+        <td>single_key</td>
+        <td>ref</td>
+    </tr>
+    <tr>
+        <td>0.47</td>
+        <td>(q) SELECT * FROM t1 WHERE (single_key &#x3D; 50 AND col_not_index &#x3D; 50) OR single_key1 &#x3D; 2</td>
+        <td>76937</td>
+        <td>100.0</td>
+        <td>Using union(single_key,single_key1); Using where</td>
+        <td>single_key,single_key1</td>
+        <td>index_merge</td>
+    </tr>
+    <tr>
+        <td>0.38</td>
+        <td>(o) SELECT * FROM t1 WHERE primary_key &lt; 50 AND single_key &#x3D; 5</td>
+        <td>1</td>
+        <td>100.0</td>
+        <td>Using index condition</td>
+        <td>single_key</td>
+        <td>range</td>
+    </tr>
+    <tr style="height:2px">
+        <td align="center" colspan="10">---------------</td>
+    </tr>
+    <tr>
+        <td>0.47</td>
+        <td>(b) SELECT * FROM t1 WHERE col_not_index &#x3D; 500</td>
+        <td>191503</td>
+        <td>10.0</td>
+        <td>Using where</td>
+        <td></td>
+        <td>ALL</td>
+    </tr>
+    <tr>
+        <td>0.74</td>
+        <td>(q) SELECT * FROM t1 WHERE single_key &#x3D; 3</td>
+        <td>88</td>
+        <td>100.0</td>
+        <td></td>
+        <td>single_key</td>
+        <td>ref</td>
+    </tr>
+    <tr>
+        <td>0.49</td>
+        <td>(q) SELECT single_key FROM t1 WHERE single_key &#x3D; 3</td>
+        <td>88</td>
+        <td>100.0</td>
+        <td>Using index</td>
+        <td>single_key</td>
+        <td>ref</td>
+    </tr>
+    <tr>
+        <td>0.66</td>
+        <td>(q) SELECT * FROM t1 WHERE single_key &#x3D; 3 OR col_not_index &#x3D; 50</td>
+        <td>191503</td>
+        <td>19.0</td>
+        <td>Using where</td>
+        <td></td>
+        <td>ALL</td>
+    </tr>
+    <tr>
+        <td>0.42</td>
+        <td>(q) SELECT * FROM t1 WHERE single_key &#x3D; 3 AND col_not_index &#x3D; 50</td>
+        <td>88</td>
+        <td>10.0</td>
+        <td>Using where</td>
+        <td>single_key</td>
+        <td>ref</td>
+    </tr>
+    <tr>
+        <td>0.40</td>
+        <td>(q) SELECT * FROM t1 WHERE single_key &gt; 5</td>
+        <td>191503</td>
+        <td>50.0</td>
+        <td>Using where</td>
+        <td></td>
+        <td>ALL</td>
+    </tr>
+    <tr>
+        <td>0.45</td>
+        <td>(q) SELECT single_key FROM t1 WHERE single_key &gt; 5</td>
+        <td>95751</td>
+        <td>100.0</td>
+        <td>Using where; Using index</td>
+        <td>single_key</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.34</td>
+        <td>(q) SELECT * FROM t1 WHERE single_key &lt; 5</td>
+        <td>317</td>
+        <td>100.0</td>
+        <td>Using index condition</td>
+        <td>single_key</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.81</td>
+        <td>(o) SELECT single_key FROM t1 WHERE single_key &lt; 5</td>
+        <td>317</td>
+        <td>100.0</td>
+        <td>Using where; Using index</td>
+        <td>single_key</td>
+        <td>range</td>
+    </tr>
+    <tr style="height:2px">
+        <td align="center" colspan="10">---------------</td>
+    </tr>
+    <tr>
+        <td>0.64</td>
+        <td>(b) SELECT * FROM t1 WHERE part_key2 &#x3D; 12</td>
+        <td>191503</td>
+        <td>10.0</td>
+        <td>Using where</td>
+        <td></td>
+        <td>ALL</td>
+    </tr>
+    <tr>
+        <td>0.38</td>
+        <td>(b) SELECT * FROM t1 WHERE part_key1 &#x3D; 1000 OR part_key2 &#x3D; 12</td>
+        <td>191503</td>
+        <td>19.0</td>
+        <td>Using where</td>
+        <td></td>
+        <td>ALL</td>
+    </tr>
+    <tr>
+        <td>0.53</td>
+        <td>(b) SELECT * FROM t1 WHERE part_key1 &#x3D; 500 OR col_not_index &#x3D; 500</td>
+        <td>191503</td>
+        <td>19.0</td>
+        <td>Using where</td>
+        <td></td>
+        <td>ALL</td>
+    </tr>
+    <tr>
+        <td>0.55</td>
+        <td>(q) SELECT * FROM t1 WHERE part_key1 &#x3D; 500</td>
+        <td>99</td>
+        <td>100.0</td>
+        <td></td>
+        <td>single_key</td>
+        <td>ref</td>
+    </tr>
+    <tr>
+        <td>0.38</td>
+        <td>(q) SELECT * FROM t1 WHERE part_key1 &#x3D; 1000 AND part_key2 &#x3D; 12</td>
+        <td>1</td>
+        <td>100.0</td>
+        <td></td>
+        <td>part_key1_key2</td>
+        <td>ref</td>
+    </tr>
+    <tr>
+        <td>0.54</td>
+        <td>(q) SELECT * FROM t1 WHERE part_key1 &#x3D; 1000 AND part_key2 &gt; 12</td>
+        <td>112</td>
+        <td>33.33</td>
+        <td>Using where</td>
+        <td>single_key</td>
+        <td>ref</td>
+    </tr>
+    <tr>
+        <td>0.63</td>
+        <td>(o) SELECT * FROM t1 WHERE part_key1 &#x3D; 1000 AND part_key2 &lt; 12</td>
+        <td>6</td>
+        <td>100.0</td>
+        <td>Using index condition</td>
+        <td>part_key1_key2</td>
+        <td>range</td>
+    </tr>
+    <tr style="height:2px">
+        <td align="center" colspan="10">---------------</td>
+    </tr>
+    <tr>
+        <td>0.67</td>
+        <td>(b) SELECT * FROM t1 WHERE col_not_index &gt;&#x3D; 1 AND col_not_index &lt; 5</td>
+        <td>191503</td>
+        <td>11.11</td>
+        <td>Using where</td>
+        <td></td>
+        <td>ALL</td>
+    </tr>
+    <tr>
+        <td>0.83</td>
+        <td>(q) SELECT * FROM t1 WHERE single_key &gt;&#x3D; 1 AND single_key &lt; 5</td>
+        <td>317</td>
+        <td>100.0</td>
+        <td>Using index condition</td>
+        <td>single_key</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.49</td>
+        <td>(q) SELECT * FROM t1 WHERE single_key &gt;&#x3D; 1 AND single_key &lt; 5 AND col_not_index &#x3D; 50</td>
+        <td>317</td>
+        <td>10.0</td>
+        <td>Using index condition; Using where</td>
+        <td>single_key</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.49</td>
+        <td>(q) SELECT * FROM t1 WHERE single_key IN(1, 2, 3, 4)</td>
+        <td>317</td>
+        <td>100.0</td>
+        <td>Using index condition</td>
+        <td>single_key</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.44</td>
+        <td>(q) SELECT * FROM t1 WHERE single_key &#x3D; 1 OR single_key &#x3D; 2</td>
+        <td>140</td>
+        <td>100.0</td>
+        <td>Using index condition</td>
+        <td>single_key</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.59</td>
+        <td>(q) SELECT * FROM t1 WHERE single_key &lt; 5</td>
+        <td>317</td>
+        <td>100.0</td>
+        <td>Using index condition</td>
+        <td>single_key</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.50</td>
+        <td>(o) SELECT * FROM t1 WHERE single_key BETWEEN 1 AND 4</td>
+        <td>317</td>
+        <td>100.0</td>
+        <td>Using index condition</td>
+        <td>single_key</td>
+        <td>range</td>
+    </tr>
+    <tr style="height:2px">
+        <td align="center" colspan="10">---------------</td>
+    </tr>
+    <tr>
+        <td>0.43</td>
+        <td>(b) SELECT * FROM t1 WHERE single_key_as_string LIKE &#39;%1&#39;</td>
+        <td>191503</td>
+        <td>11.11</td>
+        <td>Using where</td>
+        <td></td>
+        <td>ALL</td>
+    </tr>
+    <tr>
+        <td>0.42</td>
+        <td>(o) SELECT * FROM t1 WHERE single_key_as_string LIKE &#39;name1%&#39;</td>
+        <td>191503</td>
+        <td>50.0</td>
+        <td>Using where</td>
+        <td></td>
+        <td>ALL</td>
+    </tr>
+    <tr style="height:2px">
+        <td align="center" colspan="10">---------------</td>
+    </tr>
+    <tr>
+        <td>0.47</td>
+        <td>(b) SELECT * FROM t1 ORDER BY single_key</td>
+        <td>191503</td>
+        <td>100.0</td>
+        <td>Using filesort</td>
+        <td></td>
+        <td>ALL</td>
+    </tr>
+    <tr>
+        <td>0.29</td>
+        <td>(q) SELECT single_key FROM t1 ORDER BY single_key</td>
+        <td>191503</td>
+        <td>100.0</td>
+        <td>Using index</td>
+        <td>single_key</td>
+        <td>index</td>
+    </tr>
+    <tr>
+        <td>0.36</td>
+        <td>(q) SELECT * FROM t1 ORDER BY single_key DESC LIMIT 100</td>
+        <td>100</td>
+        <td>100.0</td>
+        <td>Backward index scan</td>
+        <td>single_key</td>
+        <td>index</td>
+    </tr>
+    <tr>
+        <td>0.45</td>
+        <td>(b) SELECT * FROM t1 WHERE single_key &gt; 5 ORDER BY single_key DESC</td>
+        <td>191503</td>
+        <td>50.0</td>
+        <td>Using where; Using filesort</td>
+        <td></td>
+        <td>ALL</td>
+    </tr>
+    <tr>
+        <td>0.34</td>
+        <td>(q) SELECT * FROM t1 WHERE single_key &#x3D; 3 ORDER BY single_key DESC</td>
+        <td>88</td>
+        <td>100.0</td>
+        <td></td>
+        <td>single_key</td>
+        <td>ref</td>
+    </tr>
+    <tr>
+        <td>0.43</td>
+        <td>(b) SELECT single_key FROM t1 WHERE single_key &#x3D; 3 ORDER BY single_key DESC</td>
+        <td>88</td>
+        <td>100.0</td>
+        <td>Using index</td>
+        <td>single_key</td>
+        <td>ref</td>
+    </tr>
+    <tr>
+        <td>0.44</td>
+        <td>(b) SELECT * FROM t1 WHERE single_key &lt; 5 ORDER BY single_key</td>
+        <td>317</td>
+        <td>100.0</td>
+        <td>Using index condition</td>
+        <td>single_key</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.33</td>
+        <td>(o) SELECT single_key FROM t1 WHERE single_key &lt; 5 ORDER BY single_key</td>
+        <td>317</td>
+        <td>100.0</td>
+        <td>Using where; Using index</td>
+        <td>single_key</td>
+        <td>range</td>
+    </tr>
+    <tr style="height:2px">
+        <td align="center" colspan="10">---------------</td>
+    </tr>
+    <tr>
+        <td>0.35</td>
+        <td>(q) SELECT * FROM t1 ORDER BY part_key1, part_key2</td>
+        <td>191503</td>
+        <td>100.0</td>
+        <td>Using filesort</td>
+        <td></td>
+        <td>ALL</td>
+    </tr>
+    <tr>
+        <td>0.39</td>
+        <td>(q) SELECT * FROM t1 WHERE part_key1 &#x3D; 2 ORDER BY part_key1 DESC, part_key2 DESC LIMIT 100</td>
+        <td>97</td>
+        <td>100.0</td>
+        <td>Backward index scan</td>
+        <td>part_key1_key2</td>
+        <td>ref</td>
+    </tr>
+    <tr>
+        <td>0.40</td>
+        <td>(q) SELECT * FROM t1 ORDER BY part_key1 DESC, part_key2 DESC LIMIT 100</td>
+        <td>100</td>
+        <td>100.0</td>
+        <td>Backward index scan</td>
+        <td>part_key1_key2</td>
+        <td>index</td>
+    </tr>
+    <tr>
+        <td>0.30</td>
+        <td>(q) SELECT * FROM t1 ORDER BY part_key1 ASC, part_key2 ASC LIMIT 100</td>
+        <td>100</td>
+        <td>100.0</td>
+        <td></td>
+        <td>part_key1_key2</td>
+        <td>index</td>
+    </tr>
+    <tr>
+        <td>0.39</td>
+        <td>(q) SELECT * FROM t1 WHERE part_key1 &#x3D; 2 ORDER BY part_key2</td>
+        <td>97</td>
+        <td>100.0</td>
+        <td></td>
+        <td>part_key1_key2</td>
+        <td>ref</td>
+    </tr>
+    <tr>
+        <td>0.48</td>
+        <td>(q) SELECT * FROM t1 WHERE part_key1 &#x3D; 2 AND part_key2 &gt; 12 ORDER BY part_key2</td>
+        <td>93</td>
+        <td>100.0</td>
+        <td>Using index condition</td>
+        <td>part_key1_key2</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.33</td>
+        <td>(o) SELECT * FROM t1 WHERE part_key1 &#x3D; 2 AND part_key2 &lt; 12 ORDER BY part_key2</td>
+        <td>3</td>
+        <td>100.0</td>
+        <td>Using index condition</td>
+        <td>part_key1_key2</td>
+        <td>range</td>
+    </tr>
+    <tr style="height:2px">
+        <td align="center" colspan="10">---------------</td>
+    </tr>
+    <tr>
+        <td>0.30</td>
+        <td>(b) SELECT col_not_index FROM t1 WHERE col_not_index &gt; 5 GROUP BY col_not_index</td>
+        <td>191503</td>
+        <td>33.33</td>
+        <td>Using where; Using temporary</td>
+        <td></td>
+        <td>ALL</td>
+    </tr>
+    <tr>
+        <td>0.36</td>
+        <td>(b) SELECT * FROM t1 GROUP BY single_key</td>
+        <td>191503</td>
+        <td>100.0</td>
+        <td></td>
+        <td>single_key</td>
+        <td>index</td>
+    </tr>
+    <tr>
+        <td>0.25</td>
+        <td>(b) SELECT single_key FROM t1 GROUP BY single_key</td>
+        <td>1936</td>
+        <td>100.0</td>
+        <td>Using index for group-by</td>
+        <td>part_key1_key2</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.36</td>
+        <td>(b) SELECT * FROM t1 WHERE single_key &lt; 5 GROUP BY single_key</td>
+        <td>317</td>
+        <td>100.0</td>
+        <td>Using index condition</td>
+        <td>single_key</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.43</td>
+        <td>(b) SELECT single_key FROM t1 WHERE single_key &lt; 5 GROUP BY single_key</td>
+        <td>317</td>
+        <td>100.0</td>
+        <td>Using where; Using index</td>
+        <td>single_key</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.33</td>
+        <td>(b) SELECT * FROM t1 WHERE single_key &#x3D; 5 GROUP BY single_key</td>
+        <td>97</td>
+        <td>100.0</td>
+        <td></td>
+        <td>single_key</td>
+        <td>ref</td>
+    </tr>
+    <tr>
+        <td>0.31</td>
+        <td>(b) SELECT single_key FROM t1 WHERE single_key &#x3D; 5 GROUP BY single_key</td>
+        <td>97</td>
+        <td>100.0</td>
+        <td>Using index</td>
+        <td>single_key</td>
+        <td>ref</td>
+    </tr>
+    <tr>
+        <td>0.53</td>
+        <td>(b) SELECT * FROM t1 WHERE single_key &gt; 5 GROUP BY single_key</td>
+        <td>191503</td>
+        <td>50.0</td>
+        <td>Using where</td>
+        <td>single_key</td>
+        <td>index</td>
+    </tr>
+    <tr>
+        <td>0.34</td>
+        <td>(b) SELECT single_key FROM t1 WHERE single_key &gt; 5 GROUP BY single_key</td>
+        <td>1043</td>
+        <td>100.0</td>
+        <td>Using where; Using index for group-by</td>
+        <td>single_key</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.41</td>
+        <td>(b) SELECT id, single_key FROM t1 WHERE single_key &gt; 5 GROUP BY single_key</td>
+        <td>95751</td>
+        <td>100.0</td>
+        <td>Using where; Using index</td>
+        <td>single_key</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.34</td>
+        <td>(o) SELECT id, single_key, col_not_index FROM t1 WHERE single_key &gt; 5 GROUP BY single_key</td>
+        <td>191503</td>
+        <td>50.0</td>
+        <td>Using where</td>
+        <td>single_key</td>
+        <td>index</td>
+    </tr>
+    <tr style="height:2px">
+        <td align="center" colspan="10">---------------</td>
+    </tr>
+    <tr>
+        <td>0.22</td>
+        <td>(b) SELECT DISTINCT single_key FROM t1</td>
+        <td>1936</td>
+        <td>100.0</td>
+        <td>Using index for group-by</td>
+        <td>part_key1_key2</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.34</td>
+        <td>(b) SELECT COUNT(DISTINCT single_key) FROM t1</td>
+        <td>1936</td>
+        <td>100.0</td>
+        <td>Using index for group-by</td>
+        <td>part_key1_key2</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.28</td>
+        <td>(b) SELECT SUM(single_key) FROM t1</td>
+        <td>191503</td>
+        <td>100.0</td>
+        <td>Using index</td>
+        <td>single_key</td>
+        <td>index</td>
+    </tr>
+    <tr>
+        <td>0.23</td>
+        <td>(b) SELECT SUM(single_key) FROM t1 GROUP BY single_key</td>
+        <td>191503</td>
+        <td>100.0</td>
+        <td>Using index</td>
+        <td>single_key</td>
+        <td>index</td>
+    </tr>
+    <tr>
+        <td>0.28</td>
+        <td>(o) SELECT MIN(single_key) FROM t1</td>
+        <td>0</td>
+        <td>0.0</td>
+        <td>Select tables optimized away</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr style="height:2px">
+        <td align="center" colspan="10">---------------</td>
+    </tr>
+    <tr>
+        <td>0.35</td>
+        <td>(b) SELECT * FROM t1 GROUP BY part_key1, part_key2</td>
+        <td>191503</td>
+        <td>100.0</td>
+        <td></td>
+        <td>part_key1_key2</td>
+        <td>index</td>
+    </tr>
+    <tr>
+        <td>0.22</td>
+        <td>(b) SELECT part_key1, part_key2 FROM t1 GROUP BY part_key1, part_key2</td>
+        <td>191503</td>
+        <td>100.0</td>
+        <td>Using index</td>
+        <td>part_key1_key2</td>
+        <td>index</td>
+    </tr>
+    <tr>
+        <td>0.33</td>
+        <td>(b) SELECT part_key1, part_key2, col_not_index FROM t1 GROUP BY part_key1, part_key2</td>
+        <td>191503</td>
+        <td>100.0</td>
+        <td></td>
+        <td>part_key1_key2</td>
+        <td>index</td>
+    </tr>
+    <tr>
+        <td>0.38</td>
+        <td>(b) SELECT * FROM t1 WHERE part_key1 &#x3D; 5 GROUP BY part_key1, part_key2</td>
+        <td>97</td>
+        <td>100.0</td>
+        <td></td>
+        <td>part_key1_key2</td>
+        <td>ref</td>
+    </tr>
+    <tr>
+        <td>0.38</td>
+        <td>(b) SELECT part_key1, part_key2 FROM t1 WHERE part_key1 &lt; 5 GROUP BY part_key1, part_key2</td>
+        <td>317</td>
+        <td>100.0</td>
+        <td>Using where; Using index</td>
+        <td>part_key1_key2</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.45</td>
+        <td>(b) SELECT part_key1, part_key2 FROM t1 WHERE part_key1 &gt; 5 GROUP BY part_key1, part_key2</td>
+        <td>95751</td>
+        <td>100.0</td>
+        <td>Using where; Using index</td>
+        <td>part_key1_key2</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.31</td>
+        <td>(b) SELECT part_key1 FROM t1 WHERE part_key1 &gt; 5 GROUP BY part_key1, part_key2</td>
+        <td>95751</td>
+        <td>100.0</td>
+        <td>Using where; Using index</td>
+        <td>part_key1_key2</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.29</td>
+        <td>(b) SELECT part_key1 FROM t1 WHERE part_key1 &#x3D; 5 AND part_key2 &gt; 12 GROUP BY part_key1, part_key2</td>
+        <td>91</td>
+        <td>100.0</td>
+        <td>Using where; Using index</td>
+        <td>part_key1_key2</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.37</td>
+        <td>(o) SELECT part_key1 FROM t1 WHERE part_key1 &#x3D; 5 GROUP BY part_key1, part_key2</td>
+        <td>97</td>
+        <td>100.0</td>
+        <td>Using index</td>
+        <td>part_key1_key2</td>
+        <td>ref</td>
+    </tr>
+    <tr style="height:2px">
+        <td align="center" colspan="10">---------------</td>
+    </tr>
+    <tr>
+        <td>0.32</td>
+        <td>(b) SELECT * FROM t1 WHERE part_key2 &#x3D; 5 GROUP BY part_key1</td>
+        <td>191503</td>
+        <td>10.0</td>
+        <td>Using where</td>
+        <td>single_key</td>
+        <td>index</td>
+    </tr>
+    <tr>
+        <td>0.30</td>
+        <td>(b) SELECT * FROM t1 WHERE part_key1 &#x3D; 5 GROUP BY part_key1</td>
+        <td>97</td>
+        <td>100.0</td>
+        <td></td>
+        <td>single_key</td>
+        <td>ref</td>
+    </tr>
+    <tr>
+        <td>0.35</td>
+        <td>(q) SELECT part_key1, id FROM t1 WHERE part_key2 &#x3D; 5 GROUP BY part_key1</td>
+        <td>191503</td>
+        <td>10.0</td>
+        <td>Using where; Using index</td>
+        <td>part_key1_key2</td>
+        <td>index</td>
+    </tr>
+    <tr>
+        <td>0.27</td>
+        <td>(q) SELECT part_key1, part_key2 FROM t1 WHERE part_key2 &#x3D; 5 GROUP BY part_key1</td>
+        <td>1936</td>
+        <td>100.0</td>
+        <td>Using where; Using index for group-by</td>
+        <td>part_key1_key2</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.23</td>
+        <td>(q) SELECT part_key1, MIN(part_key2) FROM t1 GROUP BY part_key1</td>
+        <td>1936</td>
+        <td>100.0</td>
+        <td>Using index for group-by</td>
+        <td>part_key1_key2</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.29</td>
+        <td>(q) SELECT part_key1, part_key2 FROM t1 WHERE col_not_index &#x3D; 5 GROUP BY part_key1</td>
+        <td>191503</td>
+        <td>10.0</td>
+        <td>Using where</td>
+        <td>single_key</td>
+        <td>index</td>
+    </tr>
+    <tr>
+        <td>0.29</td>
+        <td>(o) SELECT part_key1 FROM t1 WHERE part_key2 &#x3D; 5 GROUP BY part_key1</td>
+        <td>1936</td>
+        <td>100.0</td>
+        <td>Using where; Using index for group-by</td>
+        <td>part_key1_key2</td>
+        <td>range</td>
+    </tr>
+    <tr style="height:2px">
+        <td align="center" colspan="10">---------------</td>
+    </tr>
+    <tr>
+        <td>0.34</td>
+        <td>(b) SELECT * FROM t1 GROUP BY part_key2</td>
+        <td>191503</td>
+        <td>100.0</td>
+        <td>Using temporary</td>
+        <td></td>
+        <td>ALL</td>
+    </tr>
+    <tr>
+        <td>0.45</td>
+        <td>(b) SELECT * FROM t1 WHERE part_key1 &#x3D; 5 GROUP BY part_key2</td>
+        <td>97</td>
+        <td>100.0</td>
+        <td></td>
+        <td>part_key1_key2</td>
+        <td>ref</td>
+    </tr>
+    <tr>
+        <td>0.43</td>
+        <td>(b) SELECT part_key1, part_key2 FROM t1 WHERE part_key1 &#x3D; 5 GROUP BY part_key2</td>
+        <td>97</td>
+        <td>100.0</td>
+        <td>Using index</td>
+        <td>part_key1_key2</td>
+        <td>ref</td>
+    </tr>
+    <tr>
+        <td>0.43</td>
+        <td>(b) SELECT part_key2 FROM t1 WHERE part_key1 &#x3D; 5 GROUP BY part_key2</td>
+        <td>97</td>
+        <td>100.0</td>
+        <td>Using index</td>
+        <td>part_key1_key2</td>
+        <td>ref</td>
+    </tr>
+    <tr>
+        <td>0.68</td>
+        <td>(b) SELECT part_key2 FROM t1 WHERE part_key1 &gt; 5 GROUP BY part_key2</td>
+        <td>95751</td>
+        <td>100.0</td>
+        <td>Using where; Using index; Using temporary</td>
+        <td>part_key1_key2</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.42</td>
+        <td>(b) SELECT part_key2 FROM t1 WHERE part_key1 &lt; 5 GROUP BY part_key2</td>
+        <td>317</td>
+        <td>100.0</td>
+        <td>Using where; Using index; Using temporary</td>
+        <td>part_key1_key2</td>
+        <td>range</td>
+    </tr>
+    <tr>
+        <td>0.34</td>
+        <td>(b) SELECT part_key1 FROM t1 WHERE part_key1 &#x3D; 5 GROUP BY part_key2</td>
+        <td>97</td>
+        <td>100.0</td>
+        <td>Using index</td>
+        <td>part_key1_key2</td>
+        <td>ref</td>
+    </tr>
+    <tr>
+        <td>0.38</td>
+        <td>(o) SELECT * FROM t1 GROUP BY part_key2</td>
+        <td>191503</td>
+        <td>100.0</td>
+        <td>Using temporary</td>
+        <td></td>
+        <td>ALL</td>
+    </tr>
+    <tr style="height:2px">
+        <td align="center" colspan="10">---------------</td>
+    </tr>
+    </tbody>
+</table>
+<br/>
+</body>
+</html>
