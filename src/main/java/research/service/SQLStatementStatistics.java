@@ -377,7 +377,7 @@ public class SQLStatementStatistics {
                 "(q) SELECT * FROM t1 WHERE single_key > 5",
                 "(q) SELECT single_key FROM t1 WHERE single_key > 5",
                 "(q) SELECT * FROM t1 WHERE single_key < 5",
-                "(q) SELECT single_key FROM t1 WHERE single_key < 5",
+                "(o) SELECT single_key FROM t1 WHERE single_key < 5",
 
                 "(b) SELECT * FROM t1 WHERE part_key2 = 12",
                 "(b) SELECT * FROM t1 WHERE part_key1 = 1000 OR part_key2 = 12",
@@ -407,7 +407,7 @@ public class SQLStatementStatistics {
                 "(q) SELECT * FROM t1 WHERE single_key = 3 ORDER BY single_key DESC",
                 "(b) SELECT single_key FROM t1 WHERE single_key = 3 ORDER BY single_key DESC",
                 "(b) SELECT * FROM t1 WHERE single_key < 5 ORDER BY single_key",
-                "(q) SELECT single_key FROM t1 WHERE single_key < 5 ORDER BY single_key",
+                "(o) SELECT single_key FROM t1 WHERE single_key < 5 ORDER BY single_key",
 
                 "(q) SELECT * FROM t1 ORDER BY part_key1, part_key2",
                 "(q) SELECT * FROM t1 WHERE part_key1 = 2 ORDER BY part_key1 DESC, part_key2 DESC LIMIT 100",
@@ -421,23 +421,20 @@ public class SQLStatementStatistics {
                 "(b) SELECT col_not_index FROM t1 WHERE col_not_index > 5 GROUP BY col_not_index",
                 "(b) SELECT * FROM t1 GROUP BY single_key",
                 "(b) SELECT single_key FROM t1 GROUP BY single_key",
-
                 "(b) SELECT * FROM t1 WHERE single_key < 5 GROUP BY single_key",
                 "(b) SELECT single_key FROM t1 WHERE single_key < 5 GROUP BY single_key",
-
                 "(b) SELECT * FROM t1 WHERE single_key = 5 GROUP BY single_key",
                 "(b) SELECT single_key FROM t1 WHERE single_key = 5 GROUP BY single_key",
-
                 "(b) SELECT * FROM t1 WHERE single_key > 5 GROUP BY single_key",
                 "(b) SELECT single_key FROM t1 WHERE single_key > 5 GROUP BY single_key",
                 "(b) SELECT id, single_key FROM t1 WHERE single_key > 5 GROUP BY single_key",
-                "(q) SELECT id, single_key, col_not_index FROM t1 WHERE single_key > 5 GROUP BY single_key",
+                "(o) SELECT id, single_key, col_not_index FROM t1 WHERE single_key > 5 GROUP BY single_key",
 
                 "(b) SELECT DISTINCT single_key FROM t1",
                 "(b) SELECT COUNT(DISTINCT single_key) FROM t1",
                 "(b) SELECT SUM(single_key) FROM t1",
                 "(b) SELECT SUM(single_key) FROM t1 GROUP BY single_key",
-                "(q) SELECT MIN(single_key) FROM t1",
+                "(o) SELECT MIN(single_key) FROM t1",
 
                 "(b) SELECT * FROM t1 GROUP BY part_key1, part_key2",
                 "(b) SELECT part_key1, part_key2 FROM t1 GROUP BY part_key1, part_key2",
@@ -447,7 +444,7 @@ public class SQLStatementStatistics {
                 "(b) SELECT part_key1, part_key2 FROM t1 WHERE part_key1 > 5 GROUP BY part_key1, part_key2",
                 "(b) SELECT part_key1 FROM t1 WHERE part_key1 > 5 GROUP BY part_key1, part_key2",
                 "(b) SELECT part_key1 FROM t1 WHERE part_key1 = 5 AND part_key2 > 12 GROUP BY part_key1, part_key2",
-                "(q) SELECT part_key1 FROM t1 WHERE part_key1 = 5 GROUP BY part_key1, part_key2",
+                "(o) SELECT part_key1 FROM t1 WHERE part_key1 = 5 GROUP BY part_key1, part_key2",
 
                 "(b) SELECT * FROM t1 WHERE part_key2 = 5 GROUP BY part_key1",
                 "(b) SELECT * FROM t1 WHERE part_key1 = 5 GROUP BY part_key1",
@@ -455,7 +452,7 @@ public class SQLStatementStatistics {
                 "(q) SELECT part_key1, part_key2 FROM t1 WHERE part_key2 = 5 GROUP BY part_key1",
                 "(q) SELECT part_key1, MIN(part_key2) FROM t1 GROUP BY part_key1",
                 "(q) SELECT part_key1, part_key2 FROM t1 WHERE col_not_index = 5 GROUP BY part_key1",
-                "(q) SELECT part_key1 FROM t1 WHERE part_key2 = 5 GROUP BY part_key1",
+                "(o) SELECT part_key1 FROM t1 WHERE part_key2 = 5 GROUP BY part_key1",
 
                 "(b) SELECT * FROM t1 GROUP BY part_key2",
                 "(b) SELECT * FROM t1 WHERE part_key1 = 5 GROUP BY part_key2",

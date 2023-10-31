@@ -29,6 +29,7 @@
     </thead>
     <tbody style="text-align: right">
     {{#listItem}}
+    {{#isBadQuery}}
     <tr>
         <td>{{durationInMs}}</td>
         <td width="500">{{sqlOrigin}}</td>
@@ -40,6 +41,23 @@
         <td>{{type}}</td>
         {{/explain}}
     </tr>
+    {{/isBadQuery}}
+    {{^isBadQuery}}
+    <tr>
+        <td>{{durationInMs}}</td>
+        <td width="500">{{sqlOrigin}}</td>
+        {{#explain}}
+        <td>{{rows}}</td>
+        <td>{{filtered}}</td>
+        <td>{{extra}}</td>
+        <td>{{key}}</td>
+        <td>{{type}}</td>
+        {{/explain}}
+    </tr>
+    <tr style="height:2px">
+        <td align="center" colspan="10">---------------</td>
+    </tr>
+    {{/isBadQuery}}
     {{/listItem}}
     </tbody>
 </table>
