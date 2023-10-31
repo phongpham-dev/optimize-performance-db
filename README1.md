@@ -1,19 +1,14 @@
-<svg fill="none" viewBox="0 0 600 300" width="600" height="300" xmlns="http://www.w3.org/2000/svg">
-  <foreignObject width="100%" height="100%">
-    <div xmlns="http://www.w3.org/1999/xhtml">
-      <style>
-        .container {
-          display: flex;
-          width: 100%;
-          height: 300px;
-          background-color: black;
-          color: white;
-        }
-      </style>
+```html
+<h2>Example of code</h2>
 
-      <div class="container">
-        <h1>Hi there, my name is Nikola 👋</h1>
-      </div>
+<pre>
+    <div class="container">
+        <div class="block two first">
+            <h2>Your title</h2>
+            <div class="wrap">
+            //Your content
+            </div>
+        </div>
     </div>
-  </foreignObject>
-</svg>
+</pre>
+```
