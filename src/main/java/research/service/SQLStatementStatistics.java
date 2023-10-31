@@ -15,6 +15,7 @@ import research.domain.mysql.ExplainData;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -594,34 +595,43 @@ public class SQLStatementStatistics {
     public void export() {
         statisticsWhere();
         try {
-            File file = new File("/Users/phong/working/research/optimize-performance-db/test.txt");
+            File file = new File("/Users/phong/working/research/optimize-performance-db/README.md");
             file.createNewFile();
 
             FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
-            visualizationDatas.forEach(v -> {
+            var dataForExport =visualizationDatas.stream().map(v -> {
 
                 var list = List.of(
-                        Optional.ofNullable(v.getDurationInMs()).orElse(0d),
-                        Optional.ofNullable(v.getSqlOrigin()).orElse(""),
+                        Optional.ofNullable(String.format("%.2f", v.getDurationInMs())).orElse(" "),
+                        Optional.ofNullable(v.getSqlOrigin()).orElse(" "),
                         Optional.ofNullable(v.getExplain().getRows()).orElse(0L),
                         Optional.ofNullable(v.getExplain().getFiltered()).orElse(0f),
-                        Optional.ofNullable(v.getExplain().getExtra()).orElse(""),
-                        Optional.ofNullable(v.getExplain().getKey()).orElse(""),
-                        Optional.ofNullable(v.getExplain().getType()).orElse("")
+                        Optional.ofNullable(v.getExplain().getExtra()).orElse(" "),
+                        Optional.ofNullable(v.getExplain().getKey()).orElse(" "),
+                        Optional.ofNullable(v.getExplain().getType()).orElse(" ")
                 );
 
                 var l = list.stream().map(o -> o.toString()).toList();
-                System.out.println(StringUtils.collectionToDelimitedString(l, "|"));
+
+                return StringUtils.collectionToDelimitedString(l, "|");
                 //System.out.println( l.toString().replaceAll(",", "|"));
+            }).toList();
 
-            });
 
-            bufferedWriter.write("hellos");
-            bufferedWriter.append("acasdasddasdasdasd");
+           dataForExport.forEach(v -> {
+               try {
+                   bufferedWriter.write(v);
+                   bufferedWriter.newLine();
+               } catch (IOException e) {
+                   throw new RuntimeException(e);
+               }
+
+           });
 
             bufferedWriter.close();
+
 
         } catch (Exception ex) {
             ex.printStackTrace();
