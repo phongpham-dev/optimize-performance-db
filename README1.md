@@ -41,4 +41,5 @@ CREATE TABLE IF NOT EXISTS `t2` (
   + Using index: thông tin cột được lấy trong Index Tree không có thực hiện tìm kiếm bổ sụng để đọc row thực tế
   + Using index for group-by: tương tự **Using index**
   + Using index condition: các Table được đọc bằng cách truy cập các bộ chỉ mục và kiểm tra chúng trước để xác định xem có đọc toàn bộ các hàng trong bảng hay không
-  
+
+## Thống kê các câu SQL
