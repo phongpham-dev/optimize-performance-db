@@ -8,10 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -47,7 +44,7 @@ public class ExplainData {
     private Float filtered;
 
     public Map<String, Object> toMap() {
-        System.out.println("addspace " + addSpace(Optional.ofNullable(extra).orElse("")));
+        System.out.println("addspace " + addSpace1(Optional.ofNullable(extra).orElse("")));
         return Map.of(
                 "rows", Optional.ofNullable(rows).orElse(0L),
                 "extra", addSpace(Optional.ofNullable(extra).orElse("")),
@@ -64,10 +61,15 @@ public class ExplainData {
         List<String> strings = new ArrayList<String>();
         int index = 0;
         while (index < text.length()) {
-            strings.add(text.substring(index, Math.min(index + 4,text.length())));
+            strings.add(text.substring(index, Math.min(index + 4, text.length())));
             index += 4;
         }
         return StringUtils.collectionToDelimitedString(strings, "\n");
     }
 
+    public String addSpace1(String text) {
+        String regex = "(,|;)";
+        var arr = Arrays.stream(text.split(regex)).toList();
+        return StringUtils.collectionToDelimitedString(arr, "\n");
+    }
 }
