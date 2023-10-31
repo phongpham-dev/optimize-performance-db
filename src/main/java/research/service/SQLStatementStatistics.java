@@ -359,14 +359,14 @@ public class SQLStatementStatistics {
                 "(q) SELECT * FROM t1 WHERE primary_key = 1",
                 "(q) SELECT * FROM t1 WHERE unique_key = 'name1'",
                 "(q) SELECT * FROM t1 WHERE unique_key = 'name1'",
-                "(o) SELECT * FROM t1 WHERE primary_key = 1 AND unique_key = 'name1'",
+                "(e) SELECT * FROM t1 WHERE primary_key = 1 AND unique_key = 'name1'",
 
                 //"index merge optimization",
                 "(q) SELECT * FROM t1 WHERE single_key = 50 OR single_key1 = 2",
                 "(q) SELECT * FROM t1 WHERE single_key < 50 OR single_key1 < 2",
                 "(q) SELECT * FROM t1 WHERE single_key = 50 AND single_key1 = 2",
                 "(q) SELECT * FROM t1 WHERE (single_key = 50 AND col_not_index = 50) OR single_key1 = 2",
-                "(o) SELECT * FROM t1 WHERE primary_key < 50 AND single_key = 5",
+                "(e) SELECT * FROM t1 WHERE primary_key < 50 AND single_key = 5",
 
                 //"WHERE optimization",
                 "(b) SELECT * FROM t1 WHERE col_not_index = 500",
@@ -385,7 +385,7 @@ public class SQLStatementStatistics {
                 "(q) SELECT * FROM t1 WHERE part_key1 = 500",
                 "(q) SELECT * FROM t1 WHERE part_key1 = 1000 AND part_key2 = 12",
                 "(q) SELECT * FROM t1 WHERE part_key1 = 1000 AND part_key2 > 12",
-                "(o) SELECT * FROM t1 WHERE part_key1 = 1000 AND part_key2 < 12",
+                "(e) SELECT * FROM t1 WHERE part_key1 = 1000 AND part_key2 < 12",
                 //"RANGE optimization",
                 "(b) SELECT * FROM t1 WHERE col_not_index >= 1 AND col_not_index < 5",
                 "(q) SELECT * FROM t1 WHERE single_key >= 1 AND single_key < 5",
@@ -393,11 +393,11 @@ public class SQLStatementStatistics {
                 "(q) SELECT * FROM t1 WHERE single_key IN(1, 2, 3, 4)",
                 "(q) SELECT * FROM t1 WHERE single_key = 1 OR single_key = 2",
                 "(q) SELECT * FROM t1 WHERE single_key < 5",
-                "(o) SELECT * FROM t1 WHERE single_key BETWEEN 1 AND 4",
+                "(e) SELECT * FROM t1 WHERE single_key BETWEEN 1 AND 4",
 
                 //"LIKE optimization",
                 "(b) SELECT * FROM t1 WHERE single_key_as_string LIKE '%1'",
-                "(o) SELECT * FROM t1 WHERE single_key_as_string LIKE 'name1%'",
+                "(e) SELECT * FROM t1 WHERE single_key_as_string LIKE 'name1%'",
 
                 //"ORDER BY optimization",
                 "(b) SELECT * FROM t1 ORDER BY single_key",
@@ -415,7 +415,7 @@ public class SQLStatementStatistics {
                 "(q) SELECT * FROM t1 ORDER BY part_key1 ASC, part_key2 ASC LIMIT 100",
                 "(q) SELECT * FROM t1 WHERE part_key1 = 2 ORDER BY part_key2",
                 "(q) SELECT * FROM t1 WHERE part_key1 = 2 AND part_key2 > 12 ORDER BY part_key2",
-                "(o) SELECT * FROM t1 WHERE part_key1 = 2 AND part_key2 < 12 ORDER BY part_key2",
+                "(e) SELECT * FROM t1 WHERE part_key1 = 2 AND part_key2 < 12 ORDER BY part_key2",
 
                 //"GROUP BY optimization",
                 "(b) SELECT col_not_index FROM t1 WHERE col_not_index > 5 GROUP BY col_not_index",
@@ -464,7 +464,7 @@ public class SQLStatementStatistics {
                 "(b) SELECT part_key2 FROM t1 WHERE part_key1 > 5 GROUP BY part_key2",
                 "(b) SELECT part_key2 FROM t1 WHERE part_key1 < 5 GROUP BY part_key2",
                 "(b) SELECT part_key1 FROM t1 WHERE part_key1 = 5 GROUP BY part_key2",
-                "(o) SELECT * FROM t1 GROUP BY part_key2",
+                "(e) SELECT * FROM t1 GROUP BY part_key2",
                 //index merge
 
         };
@@ -527,7 +527,9 @@ public class SQLStatementStatistics {
                 }
 
                 var isBadQuery = !sql.startsWith("(o)");
-                VisualizationData visualizationData = new VisualizationData(isBadQuery, duration * 1000d, originSql, sql, explainData);
+                var isEnd = !sql.startsWith("(e)");
+
+                VisualizationData visualizationData = new VisualizationData(isBadQuery, duration * 1000d, originSql, sql, explainData, isEnd);
 
                 System.out.println("explaon data " + explainData);
                 System.out.println(visualizationData);
@@ -544,48 +546,6 @@ public class SQLStatementStatistics {
         });
     }
 
-    public void statisticsWhere1() {
-        var sqlList = commonSql();
-        sqlList.forEach(pair -> {
-            var originSql = pair.getFirst();
-            var sql = pair.getSecond();
-            try {
-                System.out.println("originSql " + originSql);
-                System.out.println("sql " + sql);
-                var explainSql = "EXPLAIN " + sql.substring(4);
-                System.out.println("explain sql " + explainSql);
-
-                var explainData = execute(explainSql);
-
-                var jsonEx = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(explainData);
-
-                var profilingList = entityManager.createNativeQuery("SHOW PROFILES").getResultList();
-                var duration = 0d;
-
-                if (profilingList.size() - 1 >= 0) {
-                    var profiling = profilingList.get(profilingList.size() - 1);
-                    var json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(profiling);
-                    var jsonNode = objectMapper.readTree(json);
-                    duration = jsonNode.get(1).asDouble();
-                }
-
-                var isBadQuery = !sql.startsWith("(o)");
-                VisualizationData visualizationData = new VisualizationData(isBadQuery, duration * 1000d, originSql, sql, explainData);
-
-                System.out.println("explaon data " + explainData);
-                System.out.println(visualizationData);
-
-                visualizationDatas.add(visualizationData);
-
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-        });
-    }
 
     HashMap<String, List<VisualizationData>> map = new HashMap<String, List<VisualizationData>>();
 
@@ -595,7 +555,7 @@ public class SQLStatementStatistics {
         visualizationDatas.forEach(v -> {
             System.out.println("visualize data " + v);
             System.out.println("list size " + list.size());
-            if (v.getIsBadQuery()) list.add(v);
+            if (v.getIsEnd()) list.add(v);
             else {
                 System.out.println("list..... " + list);
                 System.out.println(".......... " + v);

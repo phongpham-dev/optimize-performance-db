@@ -26,4 +26,5 @@ public class VisualizationData {
 
     private ExplainData explain;
 
+    private Boolean isEnd;
 }

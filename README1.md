@@ -1,4 +1,4 @@
-## Define table
+## Table table
 ```text
 CREATE TABLE IF NOT EXISTS `t1` (
   `primary_key` int(11) NOT NULL AUTO_INCREMENT 
@@ -23,18 +23,22 @@ CREATE TABLE IF NOT EXISTS `t2` (
   UNIQUE KEY `unique_key` (`unique_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='High-level product categorization.';
 ```
-- Duration: thời gian chạy
-- Rows: số lượng row được duyệt
+## Chú thích
+- duration: thời gian chạy(milliseconds)
+- Rows: số lượng row được kiểm tra
+- Filtered: phần trăm row được lọc(Rows * Filtered)
 - Key: Index được sử dụng
-- Extra:
-  + Using where: duyệt qua toàn bộ table gốc
-  + Using filesort: sort toàn bộ table gốc
-  + Using index condition: duyệt qua Index Tree và table gốc để lọc giá trị phù hợp
-  + Using index: duyệt qua Index Tree
-  + Using union: duyệt đồng thời Index Tree sau đó merge lại
 - Type:
-  + ALL: duyệt qua toàn bộ table gốc
-  + const: duyệt qua const table(dùng cho primary key và unique_key)
-  + range: duyệt qua Index Tree và lọc theo range
-  + ref: Lọc rows phù hợp với giá trị
-  + index_merge: 
+    + ALL: quét qua toàn bộ Table
+    + const: quét qua Const Table(sử dụng cho primary key và unique index)
+    + ref: sử dụng Index để chọn row phù hợp(sử dụng cho cột không phải primary key và unique index và cột Index so sánh với constant sử dụng =)
+    + range: sử dụng Index để chọn row phù hợp theo range(sử dụng cho cột Index so sánh với constant sử dụng <, >, IN, LIKE, BETWEEN)
+    + index: tương tự All, nhưng quét trong **Index Tree**(khi query chỉ chọn những cột là cột Index)
+    + index_merge: sử dụng Index Merge optimization
+- Extra: thông tin bổ sung
+  + Using where: lọc ra những giá trị phù hợp
+  + Using filesort: sort toàn bộ Table
+  + Using index: thông tin cột được lấy trong Index Tree không có thực hiện tìm kiếm bổ sụng để đọc row thực tế
+  + Using index for group-by: tương tự **Using index**
+  + Using index condition: các Table được đọc bằng cách truy cập các bộ chỉ mục và kiểm tra chúng trước để xác định xem có đọc toàn bộ các hàng trong bảng hay không
+  
