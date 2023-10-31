@@ -44,7 +44,6 @@ public class ExplainData {
     private Float filtered;
 
     public Map<String, Object> toMap() {
-        System.out.println("addspace " + addSpace1(Optional.ofNullable(extra).orElse("")));
         return Map.of(
                 "rows", Optional.ofNullable(rows).orElse(0L),
                 "extra", addSpace1(Optional.ofNullable(extra).orElse("")),

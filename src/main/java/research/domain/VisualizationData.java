@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import research.domain.mysql.ExplainData;
 
+import java.util.Optional;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -23,6 +25,5 @@ public class VisualizationData {
     private String sqlText;
 
     private ExplainData explain;
-
 
 }

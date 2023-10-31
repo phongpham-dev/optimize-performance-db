@@ -13,12 +13,15 @@ import org.springframework.boot.autoconfigure.mustache.MustacheResourceTemplateL
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import research.domain.TableData;
 import research.domain.VisualizationData;
 import research.domain.mysql.ExplainData;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @Service
 @Getter
@@ -340,23 +343,32 @@ public class SQLStatementStatistics {
         return sqlList;
     }
 
+    String[] titles = {
+            "constant table",
+            "index merge optimization",
+            "WHERE optimization",
+            "RANGE optimization",
+            "LIKE optimization",
+            "ORDER BY optimization",
+            "GROUP BY optimization"
+    };
 
     public List<Pair<String, String>> commonSql() {
         String[] whereOptimization = {
-                //constant table
+                //"constant table",
                 "(q) SELECT * FROM t1 WHERE primary_key = 1",
-                "(q) SELECT * FROM t1 WHERE unique_key = 'name 1'",
-                "(q) SELECT * FROM t1 WHERE unique_key = 'name 1'",
-                "(o) SELECT * FROM t1 WHERE primary_key = 1 AND unique_key = 'name 1'",
+                "(q) SELECT * FROM t1 WHERE unique_key = 'name1'",
+                "(q) SELECT * FROM t1 WHERE unique_key = 'name1'",
+                "(o) SELECT * FROM t1 WHERE primary_key = 1 AND unique_key = 'name1'",
 
-                //index merge
+                //"index merge optimization",
                 "(q) SELECT * FROM t1 WHERE single_key = 50 OR single_key1 = 2",
                 "(q) SELECT * FROM t1 WHERE single_key < 50 OR single_key1 < 2",
                 "(q) SELECT * FROM t1 WHERE single_key = 50 AND single_key1 = 2",
                 "(q) SELECT * FROM t1 WHERE (single_key = 50 AND col_not_index = 50) OR single_key1 = 2",
                 "(o) SELECT * FROM t1 WHERE primary_key < 50 AND single_key = 5",
 
-                //ref
+                //"WHERE optimization",
                 "(b) SELECT * FROM t1 WHERE col_not_index = 500",
                 "(q) SELECT * FROM t1 WHERE single_key = 3",
                 "(q) SELECT single_key FROM t1 WHERE single_key = 3",
@@ -365,7 +377,7 @@ public class SQLStatementStatistics {
                 "(q) SELECT * FROM t1 WHERE single_key > 5",
                 "(q) SELECT single_key FROM t1 WHERE single_key > 5",
                 "(q) SELECT * FROM t1 WHERE single_key < 5",
-                "(o) SELECT single_key FROM t1 WHERE single_key < 5",
+                "(q) SELECT single_key FROM t1 WHERE single_key < 5",
 
                 "(b) SELECT * FROM t1 WHERE part_key2 = 12",
                 "(b) SELECT * FROM t1 WHERE part_key1 = 1000 OR part_key2 = 12",
@@ -374,8 +386,7 @@ public class SQLStatementStatistics {
                 "(q) SELECT * FROM t1 WHERE part_key1 = 1000 AND part_key2 = 12",
                 "(q) SELECT * FROM t1 WHERE part_key1 = 1000 AND part_key2 > 12",
                 "(o) SELECT * FROM t1 WHERE part_key1 = 1000 AND part_key2 < 12",
-
-                //range
+                //"RANGE optimization",
                 "(b) SELECT * FROM t1 WHERE col_not_index >= 1 AND col_not_index < 5",
                 "(q) SELECT * FROM t1 WHERE single_key >= 1 AND single_key < 5",
                 "(q) SELECT * FROM t1 WHERE single_key >= 1 AND single_key < 5 AND col_not_index = 50",
@@ -384,11 +395,11 @@ public class SQLStatementStatistics {
                 "(q) SELECT * FROM t1 WHERE single_key < 5",
                 "(o) SELECT * FROM t1 WHERE single_key BETWEEN 1 AND 4",
 
-                //like
+                //"LIKE optimization",
                 "(b) SELECT * FROM t1 WHERE single_key_as_string LIKE '%1'",
                 "(o) SELECT * FROM t1 WHERE single_key_as_string LIKE 'name1%'",
 
-                //order by
+                //"ORDER BY optimization",
                 "(b) SELECT * FROM t1 ORDER BY single_key",
                 "(q) SELECT single_key FROM t1 ORDER BY single_key",
                 "(q) SELECT * FROM t1 ORDER BY single_key DESC LIMIT 100",
@@ -396,7 +407,7 @@ public class SQLStatementStatistics {
                 "(q) SELECT * FROM t1 WHERE single_key = 3 ORDER BY single_key DESC",
                 "(b) SELECT single_key FROM t1 WHERE single_key = 3 ORDER BY single_key DESC",
                 "(b) SELECT * FROM t1 WHERE single_key < 5 ORDER BY single_key",
-                "(o) SELECT single_key FROM t1 WHERE single_key < 5 ORDER BY single_key",
+                "(q) SELECT single_key FROM t1 WHERE single_key < 5 ORDER BY single_key",
 
                 "(q) SELECT * FROM t1 ORDER BY part_key1, part_key2",
                 "(q) SELECT * FROM t1 WHERE part_key1 = 2 ORDER BY part_key1 DESC, part_key2 DESC LIMIT 100",
@@ -406,7 +417,7 @@ public class SQLStatementStatistics {
                 "(q) SELECT * FROM t1 WHERE part_key1 = 2 AND part_key2 > 12 ORDER BY part_key2",
                 "(o) SELECT * FROM t1 WHERE part_key1 = 2 AND part_key2 < 12 ORDER BY part_key2",
 
-                //group by
+                //"GROUP BY optimization",
                 "(b) SELECT col_not_index FROM t1 WHERE col_not_index > 5 GROUP BY col_not_index",
                 "(b) SELECT * FROM t1 GROUP BY single_key",
                 "(b) SELECT single_key FROM t1 GROUP BY single_key",
@@ -420,13 +431,13 @@ public class SQLStatementStatistics {
                 "(b) SELECT * FROM t1 WHERE single_key > 5 GROUP BY single_key",
                 "(b) SELECT single_key FROM t1 WHERE single_key > 5 GROUP BY single_key",
                 "(b) SELECT id, single_key FROM t1 WHERE single_key > 5 GROUP BY single_key",
-                "(o) SELECT id, single_key, col_not_index FROM t1 WHERE single_key > 5 GROUP BY single_key",
+                "(q) SELECT id, single_key, col_not_index FROM t1 WHERE single_key > 5 GROUP BY single_key",
 
                 "(b) SELECT DISTINCT single_key FROM t1",
                 "(b) SELECT COUNT(DISTINCT single_key) FROM t1",
                 "(b) SELECT SUM(single_key) FROM t1",
                 "(b) SELECT SUM(single_key) FROM t1 GROUP BY single_key",
-                "(o) SELECT MIN(single_key) FROM t1",
+                "(q) SELECT MIN(single_key) FROM t1",
 
                 "(b) SELECT * FROM t1 GROUP BY part_key1, part_key2",
                 "(b) SELECT part_key1, part_key2 FROM t1 GROUP BY part_key1, part_key2",
@@ -436,7 +447,7 @@ public class SQLStatementStatistics {
                 "(b) SELECT part_key1, part_key2 FROM t1 WHERE part_key1 > 5 GROUP BY part_key1, part_key2",
                 "(b) SELECT part_key1 FROM t1 WHERE part_key1 > 5 GROUP BY part_key1, part_key2",
                 "(b) SELECT part_key1 FROM t1 WHERE part_key1 = 5 AND part_key2 > 12 GROUP BY part_key1, part_key2",
-                "(o) SELECT part_key1 FROM t1 WHERE part_key1 = 5 GROUP BY part_key1, part_key2",
+                "(q) SELECT part_key1 FROM t1 WHERE part_key1 = 5 GROUP BY part_key1, part_key2",
 
                 "(b) SELECT * FROM t1 WHERE part_key2 = 5 GROUP BY part_key1",
                 "(b) SELECT * FROM t1 WHERE part_key1 = 5 GROUP BY part_key1",
@@ -444,7 +455,7 @@ public class SQLStatementStatistics {
                 "(q) SELECT part_key1, part_key2 FROM t1 WHERE part_key2 = 5 GROUP BY part_key1",
                 "(q) SELECT part_key1, MIN(part_key2) FROM t1 GROUP BY part_key1",
                 "(q) SELECT part_key1, part_key2 FROM t1 WHERE col_not_index = 5 GROUP BY part_key1",
-                "(o) SELECT part_key1 FROM t1 WHERE part_key2 = 5 GROUP BY part_key1",
+                "(q) SELECT part_key1 FROM t1 WHERE part_key2 = 5 GROUP BY part_key1",
 
                 "(b) SELECT * FROM t1 GROUP BY part_key2",
                 "(b) SELECT * FROM t1 WHERE part_key1 = 5 GROUP BY part_key2",
@@ -497,6 +508,7 @@ public class SQLStatementStatistics {
             try {
                 System.out.println("originSql " + originSql);
                 System.out.println("sql " + sql);
+
                 var explainSql = "EXPLAIN " + sql.substring(4);
                 System.out.println("explain sql " + explainSql);
 
@@ -575,6 +587,58 @@ public class SQLStatementStatistics {
         });
     }
 
+    HashMap<String, List<VisualizationData>> map = new HashMap<String, List<VisualizationData>>();
+
+    public void getMonitorHtmlByTable() {
+        AtomicInteger index = new AtomicInteger(0);
+        List<VisualizationData> list = new ArrayList<>();
+        visualizationDatas.forEach(v -> {
+            System.out.println("visualize data " + v);
+            System.out.println("list size " + list.size());
+            if (v.getIsBadQuery()) list.add(v);
+            else {
+                System.out.println("list..... " + list);
+                System.out.println(".......... " + v);
+                list.add(v);
+                System.out.println("title " + titles[index.get()]);
+
+               map.computeIfAbsent(titles[index.get()], k -> new ArrayList<>()).addAll(list);
+                //map.put(titles[index.get()], List.of(v));
+                //map.put(titles[index.get()], list);
+
+                index.incrementAndGet();
+                list.clear();
+
+                System.out.println("map after " + map);
+            }
+        });
+    }
+
+    public Map<String, Object> getMonitorHtml01() {
+        getMonitorHtmlByTable();
+        System.out.println("map ... " + map.values().toString());
+        var listTableData = Arrays.stream(titles).map(v -> {
+            return new TableData(v, map.get(v));
+        }).toList();
+        var rs = listTableData.stream().map(v -> {
+            return Map.of(
+                    "title", v.getTitle(),
+                    "listItem", v.getData().stream().map(i -> {
+                        return Map.of(
+                                "isBadQuery", i.getIsBadQuery(),
+                                "durationInMs", String.format("%.2f", i.getDurationInMs()),
+                                "sqlOrigin", i.getSqlOrigin(),
+                                "sqlText", i.getSqlText(),
+                                "explain", i.getExplain().toMap()
+                        );
+                    }).toList(),
+                    "refreshInSecond", 2
+            );
+        }).toList();
+        System.out.println("data " + rs.toString());
+        return Map.of("render", rs);
+    }
+
     public Map<String, Object> getMonitorHtml() {
         var listItem = visualizationDatas.stream()
                 .map(v -> {
@@ -628,9 +692,11 @@ public class SQLStatementStatistics {
         var contetn = readFIle();
 
         statisticsWhere();
-        var reader = mustacheResourceTemplateLoader.getTemplate("visualize");
+       // var reader = mustacheResourceTemplateLoader.getTemplate("visualize");
+        var reader = mustacheResourceTemplateLoader.getTemplate("visualize1");
         var m = Mustache.compiler().compile(reader);
-        var object = getMonitorHtml();
+       // var object = getMonitorHtml();
+        var object = getMonitorHtml01();
         var rs = m.execute(object);
         System.out.println("template " + rs);
 

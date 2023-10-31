@@ -21,6 +21,13 @@ public class VisualizationController {
         return "visualize";
     }
 
+    @GetMapping("/internal1")
+    public String monitor1(Model model) {
+        System.out.println("controller " + sqlStatementStatistics.getMonitorHtml());
+        model.addAllAttributes(sqlStatementStatistics.getMonitorHtml01());
+        return "visualize1";
+    }
+
     @GetMapping("/all")
     public String monitorAll(Model model) {
         System.out.println("controller " + sqlStatementStatistics.getMonitorHtml());
